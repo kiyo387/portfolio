@@ -192,17 +192,17 @@ export default function BespokeProjects() {
                       {fraudProject.description}
                     </p>
 
-                    <div className="grid grid-cols-3 gap-2 pt-1">
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1">
                       {fraudProject.metrics.map((m, idx) => (
-                        <div key={idx} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-center hover:bg-slate-100/70 transition-colors">
-                          <div className="text-[10px] font-mono text-slate-400">{m.label}</div>
-                          <div className="text-xs font-bold text-slate-900 font-mono mt-0.5 tabular-nums">{m.value}</div>
+                        <div key={idx} className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-center hover:bg-slate-100/70 transition-colors">
+                          <div className="text-[9px] sm:text-[10px] font-mono text-slate-400">{m.label}</div>
+                          <div className="text-[11px] sm:text-xs font-bold text-slate-900 font-mono mt-0.5 tabular-nums break-words">{m.value}</div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-slate-100 mt-6">
+                  <div className="flex flex-wrap items-center justify-between gap-2.5 pt-5 border-t border-slate-100 mt-5">
                     <MagneticButton distance={0.25}>
                       <a
                         href={fraudProject.github}
@@ -217,7 +217,7 @@ export default function BespokeProjects() {
 
                     <button
                       onClick={() => setSelectedProject(fraudProject)}
-                      className="text-xs text-sky-700 hover:text-sky-900 font-medium cursor-pointer ml-auto hover:underline transition-all"
+                      className="text-xs text-sky-700 hover:text-sky-900 font-medium cursor-pointer hover:underline transition-all"
                     >
                       Architecture &rarr;
                     </button>
@@ -236,16 +236,16 @@ export default function BespokeProjects() {
                 className="h-full"
               >
                 <SpotlightCard
-                  className="p-6 sm:p-8 flex flex-col justify-between text-left h-full"
+                  className="p-4 sm:p-8 flex flex-col justify-between text-left h-full"
                   spotlightColor="rgba(16, 185, 129, 0.08)"
                   tilt={true}
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-medium">
+                    <div className="flex flex-wrap items-center justify-between gap-1">
+                      <span className="text-[11px] sm:text-xs font-mono text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 sm:py-1 rounded-full font-medium">
                         DAA Graph Engine &bull; RAIT
                       </span>
-                      <span className="text-xs font-mono text-slate-500">Heuristics: Euclidean A*</span>
+                      <span className="text-[11px] sm:text-xs font-mono text-slate-500">Heuristics: Euclidean A*</span>
                     </div>
 
                     <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-950">
@@ -256,11 +256,11 @@ export default function BespokeProjects() {
                       {campusProject.description}
                     </p>
 
-                    <div className="grid grid-cols-3 gap-2 pt-1">
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1">
                       {campusProject.metrics.map((m, idx) => (
-                        <div key={idx} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-center hover:bg-slate-100/70 transition-colors">
-                          <div className="text-[10px] font-mono text-slate-400">{m.label}</div>
-                          <div className="text-xs font-bold text-slate-900 font-mono mt-0.5 tabular-nums">{m.value}</div>
+                        <div key={idx} className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-center hover:bg-slate-100/70 transition-colors">
+                          <div className="text-[9px] sm:text-[10px] font-mono text-slate-400">{m.label}</div>
+                          <div className="text-[11px] sm:text-xs font-bold text-slate-900 font-mono mt-0.5 tabular-nums break-words leading-tight">{m.value}</div>
                         </div>
                       ))}
                     </div>

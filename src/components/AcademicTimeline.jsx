@@ -54,7 +54,7 @@ export default function AcademicTimeline() {
         </div>
 
         {/* Vertical Timeline Path */}
-        <div className="relative pl-6 sm:pl-8 border-l border-slate-200 space-y-10 text-left">
+        <div className="relative ml-2 sm:ml-0 pl-6 sm:pl-8 border-l border-slate-200 space-y-10 text-left">
           {displayedTimeline.map((item, idx) => (
             <div key={idx} className="relative group">
               {/* Orb node on timeline axis */}
@@ -75,7 +75,7 @@ export default function AcademicTimeline() {
               </div>
 
               <SpotlightCard
-                className="p-6 sm:p-7"
+                className="p-4 sm:p-7"
                 spotlightColor="rgba(2, 132, 199, 0.08)"
               >
                 {/* Meta Header */}
@@ -146,9 +146,9 @@ export default function AcademicTimeline() {
 
                 {/* Milestone Key Deliverable Callout */}
                 {item.milestone && (
-                  <div className="mt-3.5 p-2.5 rounded-lg bg-slate-50/90 border border-slate-200/70 text-xs font-mono text-slate-700 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-600 shrink-0" />
-                    <span className="truncate">{item.milestone}</span>
+                  <div className="mt-3.5 p-2.5 rounded-lg bg-slate-50/90 border border-slate-200/70 text-xs font-mono text-slate-700 flex items-start gap-2 min-w-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-600 shrink-0 mt-1" />
+                    <span className="line-clamp-2 break-words leading-relaxed">{item.milestone}</span>
                   </div>
                 )}
 

@@ -118,7 +118,7 @@ export default function SpecialCursor() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden select-none"
+      className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden select-none hidden md:block"
       style={{ mixBlendMode: 'difference' }}
     >
       {/* 1. Fluid Liquid Jelly Reticle (Stretches with velocity & inverts colors) */}

@@ -42,7 +42,7 @@ export default function ContactSection() {
         {/* Centered Contact Channels Card */}
         <div className="mb-20 text-left">
           <SpotlightCard
-            className="p-6 sm:p-8"
+            className="p-5 sm:p-8"
             spotlightColor="rgba(2, 132, 199, 0.08)"
           >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 text-xs font-mono text-slate-500">
@@ -54,10 +54,10 @@ export default function ContactSection() {
               {/* Personal Email */}
               <div>
                 <div className="text-[11px] font-mono text-slate-400">Personal Email</div>
-                <div className="flex items-center justify-between gap-2 mt-1">
+                <div className="flex items-center justify-between gap-2 mt-1 min-w-0">
                   <a
                     href={`mailto:${personalInfo.personalEmail}`}
-                    className="text-sm font-semibold text-slate-950 hover:text-sky-600 transition-colors truncate"
+                    className="text-sm font-semibold text-slate-950 hover:text-sky-600 transition-colors truncate min-w-0"
                   >
                     {personalInfo.personalEmail}
                   </a>
@@ -75,10 +75,10 @@ export default function ContactSection() {
               {/* Institutional Email */}
               <div className="pt-3 border-t border-slate-100">
                 <div className="text-[11px] font-mono text-slate-400">Institutional Email (RAIT)</div>
-                <div className="flex items-center justify-between gap-2 mt-1">
+                <div className="flex items-center justify-between gap-2 mt-1 min-w-0">
                   <a
                     href={`mailto:${personalInfo.institutionalEmail}`}
-                    className="text-sm font-semibold text-slate-950 hover:text-sky-600 transition-colors truncate"
+                    className="text-sm font-semibold text-slate-950 hover:text-sky-600 transition-colors truncate min-w-0"
                   >
                     {personalInfo.institutionalEmail}
                   </a>
@@ -127,7 +127,7 @@ export default function ContactSection() {
         </div>
 
         {/* Minimalist Pearl Footer */}
-        <footer className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <footer className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-900">{personalInfo.name}</span>
             <span>&bull;</span>

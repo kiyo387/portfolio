@@ -37,10 +37,10 @@ export default function TechnicalSkills() {
           </div>
 
           {/* Filter Pills with Spring Indicator */}
-          <div className="flex flex-wrap gap-1.5 p-1 rounded-full bg-white border border-slate-200 text-xs shadow-2xs self-start md:self-auto relative">
+          <div className="flex flex-wrap gap-1.5 p-1 rounded-2xl sm:rounded-full bg-white border border-slate-200 text-xs shadow-2xs self-start md:self-auto relative w-full sm:w-auto">
             <button
               onClick={() => setActiveDomain('all')}
-              className={`relative px-3.5 py-1.5 rounded-full transition-colors cursor-pointer font-medium select-none ${
+              className={`relative px-3 py-1.5 rounded-full transition-colors cursor-pointer font-medium select-none ${
                 activeDomain === 'all'
                   ? 'text-white'
                   : 'text-slate-600 hover:text-slate-950'
@@ -99,7 +99,7 @@ export default function TechnicalSkills() {
                 className="h-full"
               >
                 <SpotlightCard
-                  className="p-6 sm:p-8 text-left flex flex-col justify-between h-full"
+                  className="p-4 sm:p-8 text-left flex flex-col justify-between h-full"
                   spotlightColor="rgba(2, 132, 199, 0.07)"
                   tilt={true}
                 >

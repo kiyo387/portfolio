@@ -179,6 +179,7 @@ export default function UnifiedSpatialScene() {
       <Canvas
         camera={{ position: [0, 0, 4.5], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        dpr={[1, 1.75]}
         className="w-full h-full"
       >
         {/* Full-Viewport Clean Pearlescent Chromatic Mesh Gradient */}

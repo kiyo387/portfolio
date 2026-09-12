@@ -102,6 +102,16 @@ export default function FloatingNav({ onOpenResume }) {
           window.__lenis.scrollTo(targetEl, { offset: -70, duration: 1.2 });
         }
       }
+    } else {
+      if (sectionId === 'hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const targetEl = document.getElementById(sectionId);
+        if (targetEl) {
+          const y = targetEl.getBoundingClientRect().top + window.scrollY - 70;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
     }
 
     // Safety timeout: unlock after 2800ms maximum
@@ -225,11 +235,20 @@ export default function FloatingNav({ onOpenResume }) {
         </div>
       </div>
 
+      {/* Mobile Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="pointer-events-auto fixed inset-0 bg-slate-950/25 backdrop-blur-xs md:hidden z-40 transition-opacity"
+        />
+      )}
+
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="pointer-events-auto fixed top-20 left-4 right-4 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl p-5 shadow-2xl md:hidden z-50 flex flex-col gap-3">
-          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider pb-2 border-b border-slate-100">
-            Navigation Index
+        <div className="pointer-events-auto fixed top-20 left-4 right-4 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl p-5 shadow-2xl md:hidden z-50 flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-150">
+          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center justify-between">
+            <span>Navigation Index</span>
+            <span className="text-[10px] text-slate-400 font-mono">RAIT &apos;29</span>
           </div>
           <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
@@ -240,19 +259,19 @@ export default function FloatingNav({ onOpenResume }) {
                   setMobileMenuOpen(false);
                   handleNavClick(e, link.id);
                 }}
-                className="px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950 transition-colors"
+                className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 hover:text-slate-950 active:bg-slate-200 transition-colors text-left"
               >
                 {link.label}
               </a>
             ))}
           </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
             <div className="flex items-center gap-3">
-              <a href={personalInfo.github} target="_blank" rel="noreferrer" className="hover:text-slate-950">
+              <a href={personalInfo.github} target="_blank" rel="noreferrer" className="hover:text-slate-950 font-medium">
                 GitHub
               </a>
               <span>&bull;</span>
-              <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" className="hover:text-slate-950">
+              <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" className="hover:text-slate-950 font-medium">
                 LinkedIn
               </a>
             </div>
@@ -261,9 +280,9 @@ export default function FloatingNav({ onOpenResume }) {
                 setMobileMenuOpen(false);
                 onOpenResume();
               }}
-              className="text-slate-700 font-medium hover:text-slate-950 cursor-pointer"
+              className="px-3 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-200 font-medium hover:bg-sky-100 cursor-pointer"
             >
-              CV
+              Curriculum Vitae
             </button>
           </div>
         </div>

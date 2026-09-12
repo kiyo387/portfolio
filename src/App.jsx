@@ -14,8 +14,9 @@ export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   useEffect(() => {
-    // Respect user's motion preferences
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Respect user's motion preferences or coarse pointer (mobile touchscreens)
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || isTouch) {
       return;
     }
 
