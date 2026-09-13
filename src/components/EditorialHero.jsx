@@ -52,10 +52,14 @@ export default function EditorialHero({ onOpenResume }) {
               <a
                 href="#projects"
                 onClick={(e) => {
-                  if (window.__lenis) {
-                    e.preventDefault();
-                    const el = document.getElementById('projects');
-                    if (el) window.__lenis.scrollTo(el, { offset: -70, duration: 1.2 });
+                  e.preventDefault();
+                  const el = document.getElementById('projects');
+                  if (el) {
+                    if (window.__lenis) {
+                      window.__lenis.scrollTo(el, { offset: 0, duration: 1.2 });
+                    } else {
+                      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
+                    }
                   }
                 }}
                 className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-medium transition-colors shadow-xs group cursor-pointer w-full sm:w-auto"

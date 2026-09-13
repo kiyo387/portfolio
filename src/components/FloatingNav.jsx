@@ -87,6 +87,9 @@ export default function FloatingNav({ onOpenResume }) {
   }, []);
 
   const handleNavClick = (e, sectionId) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
     setActiveSection(sectionId);
     isLockedRef.current = sectionId;
 
@@ -99,7 +102,7 @@ export default function FloatingNav({ onOpenResume }) {
       } else {
         const targetEl = document.getElementById(sectionId);
         if (targetEl) {
-          window.__lenis.scrollTo(targetEl, { offset: -70, duration: 1.2 });
+          window.__lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
         }
       }
     } else {
@@ -108,7 +111,7 @@ export default function FloatingNav({ onOpenResume }) {
       } else {
         const targetEl = document.getElementById(sectionId);
         if (targetEl) {
-          const y = targetEl.getBoundingClientRect().top + window.scrollY - 70;
+          const y = targetEl.getBoundingClientRect().top + window.scrollY;
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       }

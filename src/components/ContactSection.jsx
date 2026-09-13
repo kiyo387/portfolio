@@ -23,8 +23,8 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-slate-200/80">
-      <div className="max-w-3xl mx-auto">
+    <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-slate-200/80 min-h-screen flex flex-col justify-between">
+      <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col justify-between">
         {/* Header (Left-aligned as requested) */}
         <div className="flex flex-col mb-12 text-left">
           <div className="inline-flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">
