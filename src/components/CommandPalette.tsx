@@ -3,8 +3,8 @@ import {
   ArrowRight,
   Copy,
   Download,
+  Github,
   Moon,
-  Phone,
   Search,
   Sun,
   X,
@@ -83,7 +83,7 @@ export function CommandPalette({
       nav('sat-retrieval', 'ISRO SatRetrieval Lab', '#sat-retrieval', 'sar optical faiss croma satellite'),
       nav('pipeline', 'ML Skill Pipeline', '#pipeline', 'skills python pytorch docker'),
       nav('credentials', 'Education & Kaggle', '#credentials', 'rait cgpa kaggle certifications'),
-      nav('contact', 'Contact & Resume', '#contact', 'email phone contact'),
+      nav('contact', 'Contact & Resume', '#contact', 'email github contact'),
       {
         id: 'action-resume',
         group: 'Actions',
@@ -109,14 +109,14 @@ export function CommandPalette({
         },
       },
       {
-        id: 'action-phone',
+        id: 'action-github',
         group: 'Actions',
-        label: 'Copy phone number',
-        hint: PROFILE.phone,
-        keywords: 'phone call mobile number copy',
-        icon: <Phone size={16} strokeWidth={1.5} aria-hidden="true" />,
+        label: 'Open GitHub profile',
+        hint: 'github.com/kiyo387',
+        keywords: 'github code repositories profile kiyo387',
+        icon: <Github size={16} strokeWidth={1.5} aria-hidden="true" />,
         run: () => {
-          copyText(PROFILE.phone);
+          window.open(PROFILE.githubUrl, '_blank', 'noopener,noreferrer');
           onClose();
         },
       },

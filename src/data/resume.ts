@@ -4,7 +4,7 @@ export interface Profile {
   role: string;
   location: string;
   email: string;
-  phone: string;
+  githubUrl: string;
   cgpa: string;
   availability: string;
   summary: string;
@@ -55,7 +55,7 @@ export const PROFILE: Profile = {
   role: 'AI/ML & Computer Vision Engineer',
   location: 'Mumbai, Maharashtra, India',
   email: 'shreyasbhavsar387@gmail.com',
-  phone: '+91 8329641785',
+  githubUrl: 'https://github.com/kiyo387',
   cgpa: '8.98/10',
   availability: 'Seeking AI/ML Internship',
   summary:

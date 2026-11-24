@@ -18,6 +18,15 @@ assertFileNonEmpty('public/assets/idd-traffic-frame.png');
 assertFileNonEmpty('public/assets/sar-port-query.png');
 assertFileNonEmpty('public/assets/optical-port-match.png');
 assertFileNonEmpty('dist/index.html');
+assertFileNonEmpty('vercel.json');
+
+const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
+const headerKeys = vercelConfig.headers?.[0]?.headers?.map((h) => h.key) ?? [];
+assert.ok(headerKeys.includes('Content-Security-Policy'), 'vercel.json missing Content-Security-Policy');
+assert.ok(headerKeys.includes('X-Content-Type-Options'), 'vercel.json missing X-Content-Type-Options');
+
+const indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
+assert.ok(!indexHtml.includes('fonts.googleapis.com'), 'index.html must not link external Google Fonts');
 
 const resumeSource = fs.readFileSync(path.join(rootDir, 'src/data/resume.ts'), 'utf8');
 for (const expected of [
@@ -26,10 +35,11 @@ for (const expected of [
   '1.8 ms',
   '24,050',
   'shreyasbhavsar387@gmail.com',
-  '+91 8329641785',
+  'https://github.com/kiyo387',
 ]) {
   assert.ok(resumeSource.includes(expected), `resume.ts missing ground-truth token: ${expected}`);
 }
+assert.ok(!resumeSource.includes('+91 8329641785'), 'Plain-text phone number must not be exposed in resume.ts');
 
 const srcFiles = [];
 function collectFiles(dir) {
@@ -51,6 +61,12 @@ for (const file of srcFiles) {
   assert.ok(!content.includes('transition-all'), `Forbidden transition-all found in ${rel}`);
   assert.ok(!content.includes('will-change: all'), `Forbidden will-change: all found in ${rel}`);
   assert.ok(!emojiRegex.test(content), `Forbidden emoji found in ${rel}`);
+  if (content.includes('target="_blank"')) {
+    assert.ok(
+      content.includes('rel="noopener noreferrer"'),
+      `target="_blank" without rel="noopener noreferrer" in ${rel}`
+    );
+  }
 }
 
-console.log(`Verification passed across ${srcFiles.length} source files and 4 public assets.`);
+console.log(`Verification passed across ${srcFiles.length} source files, security config, and 4 public assets.`);

@@ -1,16 +1,16 @@
 import { useState, type FormEvent } from 'react';
-import { Check, Copy, Download, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { ArrowUpRight, Check, Copy, Download, Github, Mail, MapPin, Send } from 'lucide-react';
 import { PROFILE } from '../data/resume';
 
 export function ContactSection() {
-  const [copiedField, setCopiedField] = useState<'email' | 'phone' | 'draft' | null>(null);
+  const [copiedField, setCopiedField] = useState<'email' | 'draft' | null>(null);
   const [senderName, setSenderName] = useState('');
   const [senderEmail, setSenderEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [statusMessage, setStatusMessage] = useState('');
 
-  const handleCopy = async (value: string, field: 'email' | 'phone' | 'draft', label: string) => {
+  const handleCopy = async (value: string, field: 'email' | 'draft', label: string) => {
     try {
       await navigator.clipboard.writeText(value);
       setCopiedField(field);
@@ -71,7 +71,7 @@ export function ContactSection() {
               Get in touch
             </h2>
             <p className="mt-3 max-w-[42ch] text-sm leading-relaxed text-[var(--text-secondary)]">
-              Available for AI/ML and Computer Vision internships. Reach out directly by email, phone, or the inquiry form.
+              Available for AI/ML and Computer Vision internships. Reach out directly by email, GitHub, or the inquiry form.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -99,29 +99,20 @@ export function ContactSection() {
                 </button>
               </div>
 
-              <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3">
+              <a
+                href={PROFILE.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3 transition-colors duration-150 hover:border-[var(--border-strong)]"
+              >
                 <div className="flex min-w-0 items-center gap-3">
-                  <Phone size={16} strokeWidth={1.5} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />
-                  <a
-                    href={`tel:${PROFILE.phone.replace(/\s+/g, '')}`}
-                    className="font-mono text-sm text-[var(--text-primary)] tabular-nums hover:underline"
-                  >
-                    {PROFILE.phone}
-                  </a>
+                  <Github size={16} strokeWidth={1.5} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />
+                  <span className="truncate font-mono text-sm text-[var(--text-primary)]">
+                    github.com/kiyo387
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => void handleCopy(PROFILE.phone, 'phone', 'phone number')}
-                  aria-label="Copy phone number"
-                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-secondary)] transition-[transform,border-color,color] duration-150 ease-out hover:border-[var(--border-strong)] hover:text-[var(--text-primary)] active:scale-[0.97]"
-                >
-                  {copiedField === 'phone' ? (
-                    <Check size={15} strokeWidth={1.5} className="text-[var(--status-ok)]" aria-hidden="true" />
-                  ) : (
-                    <Copy size={15} strokeWidth={1.5} aria-hidden="true" />
-                  )}
-                </button>
-              </div>
+                <ArrowUpRight size={15} strokeWidth={1.5} className="shrink-0 text-[var(--text-secondary)]" aria-hidden="true" />
+              </a>
 
               <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3 text-sm text-[var(--text-secondary)]">
                 <MapPin size={16} strokeWidth={1.5} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />
