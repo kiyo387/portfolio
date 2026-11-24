@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { ArrowUpRight, Check, Copy, Download, Github, Mail, MapPin, Send } from 'lucide-react';
+import { ArrowUpRight, Check, Copy, Download, Github, Linkedin, Mail, MapPin, Send } from 'lucide-react';
 import { PROFILE } from '../data/resume';
 
 export function ContactSection() {
@@ -71,7 +71,7 @@ export function ContactSection() {
               Get in touch
             </h2>
             <p className="mt-3 max-w-[42ch] text-sm leading-relaxed text-[var(--text-secondary)]">
-              Available for AI/ML and Computer Vision internships. Reach out directly by email, GitHub, or the inquiry form.
+              Available for AI/ML and Computer Vision internships. Reach out directly by email, LinkedIn, GitHub, or the inquiry form.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -98,6 +98,21 @@ export function ContactSection() {
                   )}
                 </button>
               </div>
+
+              <a
+                href={PROFILE.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3 transition-colors duration-150 hover:border-[var(--border-strong)]"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <Linkedin size={16} strokeWidth={1.5} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />
+                  <span className="truncate font-mono text-sm text-[var(--text-primary)]">
+                    linkedin.com/in/shreyas-bhavsar-053b8440a
+                  </span>
+                </div>
+                <ArrowUpRight size={15} strokeWidth={1.5} className="shrink-0 text-[var(--text-secondary)]" aria-hidden="true" />
+              </a>
 
               <a
                 href={PROFILE.githubUrl}

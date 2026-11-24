@@ -4,6 +4,7 @@ import {
   Copy,
   Download,
   Github,
+  Linkedin,
   Moon,
   Search,
   Sun,
@@ -83,7 +84,7 @@ export function CommandPalette({
       nav('sat-retrieval', 'ISRO SatRetrieval Lab', '#sat-retrieval', 'sar optical faiss croma satellite'),
       nav('pipeline', 'ML Skill Pipeline', '#pipeline', 'skills python pytorch docker'),
       nav('credentials', 'Education & Kaggle', '#credentials', 'rait cgpa kaggle certifications'),
-      nav('contact', 'Contact & Resume', '#contact', 'email github contact'),
+      nav('contact', 'Contact & Resume', '#contact', 'email linkedin github contact'),
       {
         id: 'action-resume',
         group: 'Actions',
@@ -105,6 +106,18 @@ export function CommandPalette({
         icon: <Copy size={16} strokeWidth={1.5} aria-hidden="true" />,
         run: () => {
           copyText(PROFILE.email);
+          onClose();
+        },
+      },
+      {
+        id: 'action-linkedin',
+        group: 'Actions',
+        label: 'Open LinkedIn profile',
+        hint: 'linkedin.com',
+        keywords: 'linkedin social profile network shreyas',
+        icon: <Linkedin size={16} strokeWidth={1.5} aria-hidden="true" />,
+        run: () => {
+          window.open(PROFILE.linkedinUrl, '_blank', 'noopener,noreferrer');
           onClose();
         },
       },

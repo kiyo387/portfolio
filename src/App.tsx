@@ -111,7 +111,25 @@ export default function App() {
           <span>
             {PROFILE.name} · {PROFILE.role} · {PROFILE.location}
           </span>
-          <span className="font-mono tabular-nums">Press Ctrl+K for command menu</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <a
+              href={PROFILE.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--text-secondary)] transition-colors duration-150 hover:text-[var(--text-primary)]"
+            >
+              LinkedIn
+            </a>
+            <a
+              href={PROFILE.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--text-secondary)] transition-colors duration-150 hover:text-[var(--text-primary)]"
+            >
+              GitHub
+            </a>
+            <span className="font-mono tabular-nums">Press Ctrl+K for command menu</span>
+          </div>
         </div>
       </footer>
 

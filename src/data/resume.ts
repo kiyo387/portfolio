@@ -5,6 +5,7 @@ export interface Profile {
   location: string;
   email: string;
   githubUrl: string;
+  linkedinUrl: string;
   cgpa: string;
   availability: string;
   summary: string;
@@ -56,6 +57,7 @@ export const PROFILE: Profile = {
   location: 'Mumbai, Maharashtra, India',
   email: 'shreyasbhavsar387@gmail.com',
   githubUrl: 'https://github.com/kiyo387',
+  linkedinUrl: 'https://www.linkedin.com/in/shreyas-bhavsar-053b8440a/',
   cgpa: '8.98/10',
   availability: 'Seeking AI/ML Internship',
   summary:
