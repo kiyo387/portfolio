@@ -450,7 +450,7 @@ export function SatRetrievalLab() {
           </div>
 
           {/* Range slider control */}
-          <div className="mt-3 flex flex-col gap-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] px-3.5 py-2.5">
+          <div className="mt-3 flex flex-col gap-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3.5 py-2.5">
             <div className="flex items-center justify-between text-xs">
               <label
                 htmlFor="sar-optical-split"
@@ -475,7 +475,7 @@ export function SatRetrievalLab() {
         </div>
 
         {/* FAISS HNSW + k-Reciprocal Re-Ranking panel */}
-        <div className="flex flex-col justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5 lg:col-span-5">
+        <div className="flex flex-col justify-between rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 lg:col-span-5">
           <div>
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
               <div>

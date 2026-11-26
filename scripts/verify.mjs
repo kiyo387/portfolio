@@ -37,6 +37,8 @@ for (const expected of [
   'shreyasbhavsar387@gmail.com',
   'https://github.com/kiyo387',
   'https://www.linkedin.com/in/shreyas-bhavsar-053b8440a/',
+  'indian-traffic-detection',
+  'credit-card-fraud-detection',
 ]) {
   assert.ok(resumeSource.includes(expected), `resume.ts missing ground-truth token: ${expected}`);
 }

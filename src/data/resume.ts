@@ -27,6 +27,8 @@ export interface ProjectEntry {
   period: string;
   category: string;
   headlineMetric: string;
+  repoUrl?: string;
+  sectionAnchor: 'traffic-architecture' | 'fraud-workbench' | 'sat-retrieval';
   bullets: string[];
   technologies: string[];
   pipelineSteps: { stage: string; detail: string }[];
@@ -101,6 +103,8 @@ export const PROJECTS: ProjectEntry[] = [
     period: 'Nov 2026 – Present',
     category: 'Computer Vision',
     headlineMetric: '+28% mAP@50:95 (0.345 -> 0.443)',
+    repoUrl: 'https://github.com/kiyo387/indian-traffic-detection',
+    sectionAnchor: 'traffic-architecture',
     bullets: [
       'Boosted YOLOv8 validation mAP@50:95 by 28% (0.345 to 0.443) and small-object recall by 18–26 pp on IDD (41K+ images, 507K+ boxes, leak-free sequence splits) via error analysis and 640-to-1280 scaling in PyTorch (W&B).',
       'Achieved 94–100% directional counting accuracy (Hungarian-matched to ground truth) using ByteTrack multi-object tracking and polygon ROI gating.',
@@ -133,6 +137,8 @@ export const PROJECTS: ProjectEntry[] = [
     period: 'Sep 2026',
     category: 'ML Systems',
     headlineMetric: '0.984 ROC-AUC · < 1.8 ms/tx',
+    repoUrl: 'https://github.com/kiyo387/credit-card-fraud-detection',
+    sectionAnchor: 'fraud-workbench',
     bullets: [
       'Achieved 0.984 ROC-AUC and 0.865 PR-AUC at under 1.8 ms inference latency per transaction by building an end-to-end fraud detection pipeline and Dockerized FastAPI REST microservice for a 0.17% fraud-rate dataset.',
       'Addressed severe class imbalance by combining RobustScaler, SMOTE oversampling, and tree-based ensembles (XGBoost, Random Forest), tuning decision thresholds on Precision-Recall curves to balance precision and recall.',
@@ -153,6 +159,7 @@ export const PROJECTS: ProjectEntry[] = [
     period: '2026',
     category: 'Hackathon',
     headlineMetric: '24,050 FAISS HNSW Vectors',
+    sectionAnchor: 'sat-retrieval',
     bullets: [
       'Contributed to SatRetrieval, a team system for SAR-to-optical satellite image retrieval across Sentinel-1, Sentinel-2, Landsat, LISS-3, and RISAT imagery.',
       'Collaborated on a CROMA ViT-Base embedding pipeline and FAISS HNSW index (24,050 vectors) with k-reciprocal re-ranking, and helped prepare the competition demo and presentation.',

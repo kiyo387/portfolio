@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, PointerEvent } from 'react';
 import { Crosshair, Eye, Layers, RotateCcw } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useTweenedNumber } from '../hooks/useTweenedNumber';
 
 type ModelScale = '640' | '1280';
 type RoiPresetId = 'full' | 'northbound' | 'exit' | 'custom';
@@ -214,10 +215,29 @@ export function VisionViewport() {
   );
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [imgError, setImgError] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string>('#02');
+  const [isCompact, setIsCompact] = useState<boolean>(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return false;
+    }
+    return window.matchMedia('(max-width: 639px)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const mq = window.matchMedia('(max-width: 639px)');
+    setIsCompact(mq.matches);
+    const onChange = (event: MediaQueryListEvent) => setIsCompact(event.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   const activeDetections = DETECTIONS.filter(
     (d) => scale === '1280' || d.minScale === '640'
   );
+
+  const selectedDet =
+    activeDetections.find((d) => d.id === selectedId) ?? activeDetections[0];
 
   const detectionsWithRoi = activeDetections.map((det) => {
     const centroid: Point = {
@@ -237,6 +257,9 @@ export function VisionViewport() {
           94 + Math.round((inRoiCount / activeDetections.length) * 6)
         );
   const metrics = SCALE_METRICS[scale];
+  const tweenedMap = useTweenedNumber(scale === '1280' ? 0.443 : 0.345);
+  const tweenedFps = useTweenedNumber(scale === '1280' ? 39 : 41);
+  const tweenedDirectional = useTweenedNumber(directionalMatch);
 
   const handleSelectPreset = (preset: RoiPreset) => {
     setActivePreset(preset.id);
@@ -349,7 +372,7 @@ export function VisionViewport() {
             className="h-2 w-2 rounded-full bg-[var(--status-ok)]"
             aria-hidden="true"
           />
-          <span>RTX 4050 · {metrics.fps}</span>
+          <span>RTX 4050 · {Math.round(tweenedFps)} FPS</span>
         </div>
       </div>
 
@@ -521,19 +544,27 @@ export function VisionViewport() {
 
           {/* Detections and ByteTrack trails */}
           {detectionsWithRoi.map((det) => {
+            const isSelected = det.id === selectedDet.id;
             const boxStroke = det.inRoi ? 'var(--accent)' : 'var(--text-secondary)';
             const boxOpacity = det.inRoi ? 1 : 0.45;
             const trailPoints = [...det.trail, det.centroid]
               .map((p) => `${p.x},${p.y}`)
               .join(' ');
-            const labelText = showTracks
-              ? `${det.id} ${det.label} ${det.confidence.toFixed(2)}`
-              : `${det.label} ${det.confidence.toFixed(2)}`;
-            const tagWidth = Math.max(82, labelText.length * 7.2 + 14);
+            const labelText = isCompact
+              ? det.id
+              : showTracks
+                ? `${det.id} ${det.label} ${det.confidence.toFixed(2)}`
+                : `${det.label} ${det.confidence.toFixed(2)}`;
+            const tagWidth = isCompact ? 34 : Math.max(82, labelText.length * 7.2 + 14);
             const tagY = det.box.y > 28 ? det.box.y - 22 : det.box.y + 4;
 
             return (
-              <g key={det.id} opacity={boxOpacity}>
+              <g
+                key={det.id}
+                opacity={boxOpacity}
+                onClick={() => setSelectedId(det.id)}
+                className="cursor-pointer"
+              >
                 {showTracks && (
                   <g>
                     <polyline
@@ -565,7 +596,7 @@ export function VisionViewport() {
                   rx={4}
                   fill="none"
                   stroke={boxStroke}
-                  strokeWidth={det.inRoi ? 2.25 : 1.5}
+                  strokeWidth={isSelected && isCompact ? 2.75 : det.inRoi ? 2.25 : 1.5}
                 />
 
                 <circle
@@ -587,7 +618,7 @@ export function VisionViewport() {
                   strokeWidth={1}
                 />
                 <text
-                  x={det.box.x + 7}
+                  x={det.box.x + (isCompact ? 6 : 7)}
                   y={tagY + 13.5}
                   fill="var(--text-primary)"
                   fontSize={11}
@@ -688,30 +719,47 @@ export function VisionViewport() {
           <span className="text-[var(--text-secondary)]">
             Directional match:{' '}
             <strong className="font-medium text-[var(--status-ok)]">
-              {directionalMatch}%
+              {Math.round(tweenedDirectional)}%
             </strong>
           </span>
         </div>
       </div>
 
+      {isCompact && (
+        <div
+          aria-live="polite"
+          className="mt-2.5 flex items-center justify-between border-t border-[var(--border-subtle)] pt-2 font-mono text-xs text-[var(--text-secondary)] tabular-nums"
+        >
+          <span>
+            Selected {selectedDet.id} · {selectedDet.label}
+          </span>
+          <span className="text-[var(--text-primary)]">
+            conf {selectedDet.confidence.toFixed(2)}
+          </span>
+        </div>
+      )}
+
       {/* Telemetry footer strip */}
-      <div className="mt-3.5 grid grid-cols-3 gap-2 border-t border-[var(--border-subtle)] pt-3.5">
-        <div className="rounded-lg bg-[var(--bg-base)] px-3 py-2">
+      <div className="mt-3 grid grid-cols-3 divide-x divide-[var(--border-subtle)] border-t border-[var(--border-subtle)] pt-3">
+        <div className="pr-3">
           <div className="text-xs text-[var(--text-muted)]">mAP@50:95</div>
           <div className="mt-0.5 font-mono text-sm font-medium text-[var(--text-primary)] tabular-nums">
-            {metrics.map}
+            {tweenedMap.toFixed(3)}
+            {scale === '1280' && (
+              <span className="ml-1.5 text-xs text-[var(--accent)]">(+28%)</span>
+            )}
           </div>
         </div>
-        <div className="rounded-lg bg-[var(--bg-base)] px-3 py-2">
+        <div className="px-3">
           <div className="text-xs text-[var(--text-muted)]">Small-object recall</div>
           <div className="mt-0.5 font-mono text-sm font-medium text-[var(--text-primary)] tabular-nums">
             {metrics.recall}
           </div>
         </div>
-        <div className="rounded-lg bg-[var(--bg-base)] px-3 py-2">
+        <div className="pl-3">
           <div className="text-xs text-[var(--text-muted)]">Throughput</div>
           <div className="mt-0.5 font-mono text-sm font-medium text-[var(--text-primary)] tabular-nums">
-            {metrics.fps}
+            {Math.round(tweenedFps)} FPS
           </div>
         </div>
       </div>

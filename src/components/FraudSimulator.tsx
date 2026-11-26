@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Activity, Clock, CreditCard, ShieldAlert, ShieldCheck, SlidersHorizontal, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useTweenedNumber } from '../hooks/useTweenedNumber';
 
 type PresetId = 'grocery' | 'probe' | 'electronics';
 
@@ -152,6 +153,11 @@ export function FraudSimulator() {
     [activePreset, rawAmount, hourOfDay]
   );
 
+  const tweenedPrecision = useTweenedNumber(operatingPoint.precision * 100);
+  const tweenedRecall = useTweenedNumber(operatingPoint.recall * 100);
+  const tweenedFlagRate = useTweenedNumber(operatingPoint.flagRatePct);
+  const tweenedProbability = useTweenedNumber(prediction.probability);
+
   const flagged = prediction.probability >= threshold;
   const decision = flagged ? 'FLAG_FOR_VERIFICATION' : 'AUTO_APPROVE';
 
@@ -183,7 +189,7 @@ export function FraudSimulator() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
       {/* Left: Threshold Calibration & Precision-Recall Curve */}
-      <div className="lg:col-span-6 flex flex-col justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-5">
+      <div className="lg:col-span-6 flex flex-col justify-between rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 sm:p-6">
         <div>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
@@ -376,30 +382,30 @@ export function FraudSimulator() {
         </div>
 
         {/* Calibrated Readouts */}
-        <div className="mt-4 grid grid-cols-3 gap-2.5">
-          <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-2.5">
+        <div className="mt-4 grid grid-cols-3 divide-x divide-[var(--border-subtle)] border-t border-[var(--border-subtle)] pt-4">
+          <div className="pr-3">
             <div className="text-[11px] text-[var(--text-muted)]">Precision</div>
             <div className="mt-0.5 font-mono text-base font-medium text-[var(--text-primary)] tabular-nums">
-              {(operatingPoint.precision * 100).toFixed(1)}%
+              {tweenedPrecision.toFixed(1)}%
             </div>
           </div>
-          <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-2.5">
+          <div className="px-3">
             <div className="text-[11px] text-[var(--text-muted)]">Recall</div>
             <div className="mt-0.5 font-mono text-base font-medium text-[var(--text-primary)] tabular-nums">
-              {(operatingPoint.recall * 100).toFixed(1)}%
+              {tweenedRecall.toFixed(1)}%
             </div>
           </div>
-          <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-2.5">
+          <div className="pl-3">
             <div className="text-[11px] text-[var(--text-muted)]">Flag rate</div>
             <div className="mt-0.5 font-mono text-base font-medium text-[var(--accent)] tabular-nums">
-              {operatingPoint.flagRatePct.toFixed(2)}%
+              {tweenedFlagRate.toFixed(2)}%
             </div>
           </div>
         </div>
       </div>
 
       {/* Right: FastAPI POST /predict Live Microservice Simulator */}
-      <div className="lg:col-span-6 flex flex-col justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-5">
+      <div className="lg:col-span-6 flex flex-col justify-between rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 sm:p-6">
         <div>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -521,6 +527,9 @@ export function FraudSimulator() {
             <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
               <Activity size={16} strokeWidth={1.5} className="text-[var(--text-muted)]" aria-hidden="true" />
               <span>Inference response</span>
+              <span className="font-mono text-[var(--text-primary)] tabular-nums">
+                ({(tweenedProbability * 100).toFixed(1)}%)
+              </span>
             </div>
 
             <motion.span

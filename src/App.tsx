@@ -101,7 +101,7 @@ export default function App() {
         <Hero onExploreSystems={() => handleNavigate('systems')} />
         <MetricsBar />
         <SystemsSection onNavigate={handleNavigate} />
-        <SkillPipeline />
+        <SkillPipeline onNavigate={handleNavigate} />
         <CredentialsLedger />
         <ContactSection />
       </main>

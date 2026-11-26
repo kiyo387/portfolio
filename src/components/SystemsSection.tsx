@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { ArrowUpRight, Layers, ShieldAlert, Satellite, Video } from 'lucide-react';
+import { ArrowUpRight, Github, Layers, Satellite, ShieldAlert, Video } from 'lucide-react';
+import { motion } from 'motion/react';
 import { PROJECTS } from '../data/resume';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import { FraudSimulator } from './FraudSimulator';
 import { SatRetrievalLab } from './SatRetrievalLab';
 
@@ -8,42 +10,39 @@ interface SystemsSectionProps {
   onNavigate: (sectionId: string) => void;
 }
 
-const ERROR_DIAGNOSTICS = [
+const SCALE_BUCKETS = [
   {
-    id: 'scale',
-    label: '640 -> 1280px scaling',
-    delta: '+28% mAP@50:95',
-    detail: 'Raised validation mAP@50:95 from 0.345 to 0.443 and small-object recall by 18–26 pp on IDD (41K+ images, 507K+ boxes).',
+    id: 'large',
+    label: 'Large (Bus / Truck)',
+    baselineWidth: 78,
+    scaledWidth: 84,
+    gain: '+6 pp',
   },
   {
-    id: 'splits',
-    label: 'Leak-free sequence splits',
-    delta: '41K+ IDD frames',
-    detail: 'Partitioned driving sequences strictly by video session in Pandas/PyTorch (W&B) so near-duplicate frames never leak across splits.',
+    id: 'medium',
+    label: 'Medium (Car / Auto)',
+    baselineWidth: 62,
+    scaledWidth: 76,
+    gain: '+14 pp',
   },
   {
-    id: 'tracking',
-    label: 'ByteTrack + polygon ROI',
-    delta: '94–100% count accuracy',
-    detail: 'Hungarian-matched directional vehicle counts against ground truth across 1080p streams at 39–41 FPS on an RTX 4050.',
-  },
-  {
-    id: 'serving',
-    label: 'FastAPI + Gradio calibration',
-    delta: 'Dockerized REST API',
-    detail: 'Packaged inference and live polygon ROI gate calibration into a Dockerized FastAPI microservice paired with a Gradio UI.',
+    id: 'small',
+    label: 'Small & Distant (2-Wheeler)',
+    baselineWidth: 38,
+    scaledWidth: 62,
+    gain: '+24 pp',
   },
 ];
 
 export function SystemsSection({ onNavigate }: SystemsSectionProps) {
-  const [activeDiagnostic, setActiveDiagnostic] = useState(ERROR_DIAGNOSTICS[0].id);
+  const [activeStepIndex, setActiveStepIndex] = useState(1);
+  const reducedMotion = useReducedMotion();
 
   const trafficProject = PROJECTS[0];
   const fraudProject = PROJECTS[1];
   const satProject = PROJECTS[2];
 
-  const selectedDiag =
-    ERROR_DIAGNOSTICS.find((item) => item.id === activeDiagnostic) ?? ERROR_DIAGNOSTICS[0];
+  const selectedStep = trafficProject.pipelineSteps[activeStepIndex] ?? trafficProject.pipelineSteps[0];
 
   return (
     <section
@@ -99,13 +98,13 @@ export function SystemsSection({ onNavigate }: SystemsSectionProps) {
         </div>
       </div>
 
-      {/* System 01: YOLOv8 Traffic Pipeline Architecture + Interactive Diagnostics */}
+      {/* System 01: YOLOv8 Traffic Pipeline & W&B Ablation Comparison */}
       <article
         id="traffic-architecture"
         aria-labelledby="sys-01-title"
-        className="mt-12 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8"
+        className="border-t border-[var(--border-subtle)] py-14 first:border-t-0 first:pt-10 lg:py-20"
       >
-        <div className="flex flex-col gap-4 border-b border-[var(--border-subtle)] pb-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)] tabular-nums">
               <span className="text-[var(--accent)]">{trafficProject.index}</span>
@@ -121,89 +120,223 @@ export function SystemsSection({ onNavigate }: SystemsSectionProps) {
             <p className="mt-1 text-sm text-[var(--text-secondary)]">{trafficProject.subtitle}</p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => onNavigate('hero')}
-            className="inline-flex h-10 shrink-0 items-center gap-2 self-start whitespace-nowrap rounded-lg border border-[var(--border-strong)] bg-[var(--bg-elevated)] px-4 text-xs font-medium text-[var(--text-primary)] transition-[transform,border-color,background-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
-          >
-            <Layers size={15} strokeWidth={1.5} aria-hidden="true" />
-            <span>Calibrate in hero viewport</span>
-            <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* 4-Stage Pipeline Flow */}
-        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {trafficProject.pipelineSteps.map((step) => (
-            <div
-              key={step.stage}
-              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-4"
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onNavigate('hero')}
+              className="inline-flex h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 text-xs font-medium text-[var(--text-primary)] transition-[transform,border-color,background-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
             >
-              <div className="font-mono text-xs font-medium text-[var(--accent)]">{step.stage}</div>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
-                {step.detail}
-              </p>
-            </div>
-          ))}
+              <Layers size={15} strokeWidth={1.5} aria-hidden="true" />
+              <span>Calibrate in hero viewport</span>
+            </button>
+
+            {trafficProject.repoUrl && (
+              <a
+                href={trafficProject.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 text-xs font-medium text-[var(--text-primary)] transition-[transform,border-color,background-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
+              >
+                <Github size={15} strokeWidth={1.5} aria-hidden="true" />
+                <span>View source</span>
+                <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
+              </a>
+            )}
+          </div>
         </div>
 
-        {/* Interactive Error-Analysis & Engineering Breakdown */}
-        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <ul className="space-y-2.5 text-sm leading-relaxed text-[var(--text-secondary)]">
-              {trafficProject.bullets.map((bullet) => (
-                <li key={bullet} className="flex items-start gap-2.5">
-                  <span
-                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]"
-                    aria-hidden="true"
-                  />
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
+        {/* Visual Comparison Workbench */}
+        <div className="grid grid-cols-1 gap-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 sm:p-6 lg:grid-cols-12">
+          {/* Left: W&B 640px vs 1280px Scaling & Recall Chart */}
+          <div className="lg:col-span-7 flex flex-col justify-between gap-5">
+            <div>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="text-sm font-medium text-[var(--text-primary)]">
+                  W&amp;B ablation: 640px baseline vs 1280px scaling
+                </div>
+                <div className="flex items-center gap-4 font-mono text-[11px] text-[var(--text-muted)]">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-sm bg-[var(--text-muted)]/55" aria-hidden="true" />
+                    <span>640px</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-[var(--text-primary)]">
+                    <span className="h-2 w-2 rounded-sm bg-[var(--accent)]" aria-hidden="true" />
+                    <span>1280px</span>
+                  </span>
+                </div>
+              </div>
 
-            <div className="mt-5 flex flex-wrap gap-1.5">
-              {trafficProject.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
-                >
-                  {tech}
-                </span>
-              ))}
+              {/* Validation mAP@50:95 Comparison */}
+              <div className="mt-4 space-y-2 border-b border-[var(--border-subtle)] pb-4">
+                <div className="flex items-baseline justify-between text-xs">
+                  <span className="text-[var(--text-secondary)]">
+                    Validation mAP@50:95 (IDD 41K+ images)
+                  </span>
+                  <span className="font-mono font-medium text-[var(--accent)] tabular-nums">
+                    0.345 -&gt; 0.443 (+28%)
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-3">
+                    <span className="w-14 font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
+                      0.345
+                    </span>
+                    <div className="h-2.5 flex-1 overflow-hidden rounded-sm bg-[var(--bg-base)]">
+                      <motion.div
+                        initial={reducedMotion ? false : { width: 0 }}
+                        whileInView={{ width: '58%' }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={reducedMotion ? { duration: 0 } : { duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+                        className="h-full bg-[var(--text-muted)]/55"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="w-14 font-mono text-[11px] font-medium text-[var(--text-primary)] tabular-nums">
+                      0.443
+                    </span>
+                    <div className="h-2.5 flex-1 overflow-hidden rounded-sm bg-[var(--bg-base)]">
+                      <motion.div
+                        initial={reducedMotion ? false : { width: 0 }}
+                        whileInView={{ width: '74%' }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={reducedMotion ? { duration: 0 } : { duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
+                        className="h-full bg-[var(--accent)]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* IDD Scale-Bucket Recall Gain */}
+              <div className="mt-4">
+                <div className="flex items-baseline justify-between text-xs">
+                  <span className="text-[var(--text-secondary)]">
+                    IDD scale-bucket recall gain (507K+ boxes)
+                  </span>
+                  <span className="font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
+                    +18–26 pp small-object range
+                  </span>
+                </div>
+
+                <div className="mt-3 space-y-3">
+                  {SCALE_BUCKETS.map((bucket) => (
+                    <div key={bucket.id} className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-[var(--text-primary)]">{bucket.label}</span>
+                        <span className="font-mono text-[11px] font-medium text-[var(--accent)] tabular-nums">
+                          {bucket.gain}
+                        </span>
+                      </div>
+                      <div className="relative h-2.5 w-full overflow-hidden rounded-sm bg-[var(--bg-base)]">
+                        <motion.div
+                          initial={reducedMotion ? false : { width: 0 }}
+                          whileInView={{ width: `${bucket.scaledWidth}%` }}
+                          viewport={{ once: true, amount: 0.3 }}
+                          transition={reducedMotion ? { duration: 0 } : { duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
+                          className="absolute inset-y-0 left-0 bg-[var(--accent)]"
+                        />
+                        <div
+                          className="absolute inset-y-0 left-0 bg-[var(--text-muted)]/60"
+                          style={{ width: `${bucket.baselineWidth}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 divide-x divide-[var(--border-subtle)] border-t border-[var(--border-subtle)] pt-3.5">
+              <div className="pr-4">
+                <div className="text-xs text-[var(--text-muted)]">Directional ROI count match</div>
+                <div className="mt-0.5 font-mono text-sm font-medium text-[var(--text-primary)] tabular-nums">
+                  94–100% (Hungarian)
+                </div>
+              </div>
+              <div className="pl-4">
+                <div className="text-xs text-[var(--text-muted)]">1080p runtime (RTX 4050)</div>
+                <div className="mt-0.5 font-mono text-sm font-medium text-[var(--text-primary)] tabular-nums">
+                  39–41 FPS · FastAPI + Gradio
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="lg:col-span-5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-4">
-            <div className="font-mono text-xs text-[var(--text-muted)]">
-              Ablation &amp; calibration notes
+          {/* Right: Interactive 4-Stage Pipeline Timeline */}
+          <div className="lg:col-span-5 flex flex-col justify-between border-t border-[var(--border-subtle)] pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
+            <div>
+              <div className="font-mono text-xs text-[var(--text-muted)]">
+                Pipeline stages
+              </div>
+              <div className="mt-3 divide-y divide-[var(--border-subtle)] border-y border-[var(--border-subtle)]">
+                {trafficProject.pipelineSteps.map((step, idx) => {
+                  const isActive = idx === activeStepIndex;
+                  return (
+                    <button
+                      key={step.stage}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => setActiveStepIndex(idx)}
+                      className={`flex w-full items-start justify-between gap-3 py-3 text-left transition-colors duration-150 ${
+                        isActive
+                          ? 'text-[var(--text-primary)]'
+                          : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                      }`}
+                    >
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              isActive ? 'bg-[var(--accent)]' : 'bg-[var(--border-strong)]'
+                            }`}
+                            aria-hidden="true"
+                          />
+                          <span className="font-mono text-xs font-medium text-[var(--accent)]">
+                            {step.stage}
+                          </span>
+                        </div>
+                        <p className="mt-1 pl-3.5 text-xs leading-relaxed text-[var(--text-secondary)]">
+                          {step.detail}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              {ERROR_DIAGNOSTICS.map((diag) => {
-                const selected = diag.id === activeDiagnostic;
-                return (
-                  <button
-                    key={diag.id}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => setActiveDiagnostic(diag.id)}
-                    className={`rounded-lg border px-3 py-2 text-left transition-[transform,border-color,background-color] duration-150 ease-out active:scale-[0.97] ${
-                      selected
-                        ? 'border-[var(--accent)] bg-[var(--bg-elevated)] text-[var(--text-primary)]'
-                        : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--border-strong)]'
-                    }`}
-                  >
-                    <div className="text-xs font-medium">{diag.label}</div>
-                    <div className="mt-0.5 font-mono text-[11px] text-[var(--accent)] tabular-nums">
-                      {diag.delta}
-                    </div>
-                  </button>
-                );
-              })}
+
+            <div className="mt-4 border-t border-[var(--border-subtle)] pt-3 text-xs text-[var(--text-muted)]">
+              Active stage:{' '}
+              <span className="font-mono text-[var(--text-primary)]">{selectedStep.stage}</span> —{' '}
+              {selectedStep.detail}
             </div>
-            <p className="mt-3 border-t border-[var(--border-subtle)] pt-3 text-xs leading-relaxed text-[var(--text-secondary)]">
-              {selectedDiag.detail}
-            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <ul className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)] lg:max-w-3xl">
+            {trafficProject.bullets.map((bullet) => (
+              <li key={bullet} className="flex items-start gap-2.5">
+                <span
+                  className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]"
+                  aria-hidden="true"
+                />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-wrap gap-1.5 lg:max-w-sm lg:justify-end">
+            {trafficProject.technologies.map((tech) => (
+              <span
+                key={tech}
+                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
+              >
+                {tech}
+              </span>
+            ))}
           </div>
         </div>
       </article>
@@ -212,28 +345,41 @@ export function SystemsSection({ onNavigate }: SystemsSectionProps) {
       <article
         id="fraud-workbench"
         aria-labelledby="sys-02-title"
-        className="mt-12 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8"
+        className="border-t border-[var(--border-subtle)] py-14 lg:py-20"
       >
-        <div className="border-b border-[var(--border-subtle)] pb-6">
-          <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)] tabular-nums">
-            <span className="text-[var(--accent)]">{fraudProject.index}</span>
-            <span>{fraudProject.period}</span>
-            <span>{fraudProject.category}</span>
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)] tabular-nums">
+              <span className="text-[var(--accent)]">{fraudProject.index}</span>
+              <span>{fraudProject.period}</span>
+              <span>{fraudProject.category}</span>
+            </div>
+            <h3
+              id="sys-02-title"
+              className="mt-2 text-2xl font-medium tracking-tight text-[var(--text-primary)]"
+            >
+              {fraudProject.title}
+            </h3>
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">{fraudProject.subtitle}</p>
           </div>
-          <h3
-            id="sys-02-title"
-            className="mt-2 text-2xl font-medium tracking-tight text-[var(--text-primary)]"
-          >
-            {fraudProject.title}
-          </h3>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">{fraudProject.subtitle}</p>
+
+          {fraudProject.repoUrl && (
+            <a
+              href={fraudProject.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-10 shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-lg border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 text-xs font-medium text-[var(--text-primary)] transition-[transform,border-color,background-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
+            >
+              <Github size={15} strokeWidth={1.5} aria-hidden="true" />
+              <span>View source</span>
+              <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
+            </a>
+          )}
         </div>
 
-        <div className="mt-6">
-          <FraudSimulator />
-        </div>
+        <FraudSimulator />
 
-        <div className="mt-6 flex flex-col gap-4 border-t border-[var(--border-subtle)] pt-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <ul className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)] lg:max-w-3xl">
             {fraudProject.bullets.map((bullet) => (
               <li key={bullet} className="flex items-start gap-2.5">
@@ -250,7 +396,7 @@ export function SystemsSection({ onNavigate }: SystemsSectionProps) {
             {fraudProject.technologies.map((tech) => (
               <span
                 key={tech}
-                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
+                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
               >
                 {tech}
               </span>
@@ -263,28 +409,32 @@ export function SystemsSection({ onNavigate }: SystemsSectionProps) {
       <article
         id="sat-retrieval"
         aria-labelledby="sys-03-title"
-        className="mt-12 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8"
+        className="border-t border-[var(--border-subtle)] pt-14 lg:pt-20"
       >
-        <div className="border-b border-[var(--border-subtle)] pb-6">
-          <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)] tabular-nums">
-            <span className="text-[var(--accent)]">{satProject.index}</span>
-            <span>{satProject.period}</span>
-            <span>{satProject.category}</span>
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)] tabular-nums">
+              <span className="text-[var(--accent)]">{satProject.index}</span>
+              <span>{satProject.period}</span>
+              <span>{satProject.category}</span>
+            </div>
+            <h3
+              id="sys-03-title"
+              className="mt-2 text-2xl font-medium tracking-tight text-[var(--text-primary)]"
+            >
+              {satProject.title}
+            </h3>
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">{satProject.subtitle}</p>
           </div>
-          <h3
-            id="sys-03-title"
-            className="mt-2 text-2xl font-medium tracking-tight text-[var(--text-primary)]"
-          >
-            {satProject.title}
-          </h3>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">{satProject.subtitle}</p>
+
+          <span className="inline-flex h-9 shrink-0 items-center self-start rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 font-mono text-xs text-[var(--text-secondary)]">
+            ISRO BAH 2026 · Team submission
+          </span>
         </div>
 
-        <div className="mt-6">
-          <SatRetrievalLab />
-        </div>
+        <SatRetrievalLab />
 
-        <div className="mt-6 flex flex-col gap-4 border-t border-[var(--border-subtle)] pt-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <ul className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)] lg:max-w-3xl">
             {satProject.bullets.map((bullet) => (
               <li key={bullet} className="flex items-start gap-2.5">
@@ -301,7 +451,7 @@ export function SystemsSection({ onNavigate }: SystemsSectionProps) {
             {satProject.technologies.map((tech) => (
               <span
                 key={tech}
-                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
+                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
               >
                 {tech}
               </span>

@@ -1,15 +1,26 @@
 import { useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PIPELINE_STAGES, PROJECTS, type PipelineStage } from '../data/resume';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
+interface SkillPipelineProps {
+  onNavigate: (sectionId: string) => void;
+}
+
 type StageFilter = 'all' | PipelineStage['id'];
 
-const PROJECT_NAME_MAP = Object.fromEntries(
-  PROJECTS.map((project) => [project.id, `${project.index} ${project.title.split(' with ')[0].split(' & ')[0]}`])
+const PROJECT_LOOKUP = Object.fromEntries(
+  PROJECTS.map((project) => [
+    project.id,
+    {
+      label: `${project.index} ${project.title.split(' with ')[0].split(' & ')[0]}`,
+      anchor: project.sectionAnchor,
+    },
+  ])
 );
 
-export function SkillPipeline() {
+export function SkillPipeline({ onNavigate }: SkillPipelineProps) {
   const [activeStage, setActiveStage] = useState<StageFilter>('all');
   const [selectedSkill, setSelectedSkill] = useState<string>('PyTorch');
   const reducedMotion = useReducedMotion();
@@ -28,8 +39,8 @@ export function SkillPipeline() {
       aria-labelledby="pipeline-heading"
       className="border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/45"
     >
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <h2
               id="pipeline-heading"
@@ -37,8 +48,8 @@ export function SkillPipeline() {
             >
               End-to-end ML stack
             </h2>
-            <p className="mt-2 max-w-[58ch] text-sm leading-relaxed text-[var(--text-secondary)]">
-              Select a pipeline stage or tool to inspect where it runs across production training, evaluation, and FastAPI deployment.
+            <p className="mt-2 max-w-[54ch] text-sm leading-relaxed text-[var(--text-secondary)]">
+              Click any tool to inspect its production role and jump directly to the system that runs it.
             </p>
           </div>
 
@@ -50,8 +61,8 @@ export function SkillPipeline() {
             {(['all', ...PIPELINE_STAGES.map((s) => s.id)] as StageFilter[]).map((stageId) => {
               const label =
                 stageId === 'all'
-                  ? 'All stages'
-                  : PIPELINE_STAGES.find((s) => s.id === stageId)?.title ?? stageId;
+                  ? 'All'
+                  : PIPELINE_STAGES.find((s) => s.id === stageId)?.title.split(' & ')[0] ?? stageId;
               const isActive = activeStage === stageId;
 
               return (
@@ -86,72 +97,86 @@ export function SkillPipeline() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {visibleStages.map((stage) => (
-            <div
-              key={stage.id}
-              className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5"
-            >
-              <div className="flex items-baseline justify-between gap-2">
-                <h3 className="text-base font-medium text-[var(--text-primary)]">
-                  {stage.title}
-                </h3>
-                <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
-                  Stage {stage.code}
-                </span>
-              </div>
-              <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
-                {stage.description}
-              </p>
+        <div className="mt-8 grid grid-cols-1 overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] lg:grid-cols-12">
+          {/* Left: Compact stage matrix */}
+          <div className="divide-y divide-[var(--border-subtle)] p-5 sm:p-6 lg:col-span-7">
+            {visibleStages.map((stage) => (
+              <div
+                key={stage.id}
+                className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between"
+              >
+                <div className="shrink-0 sm:w-44">
+                  <div className="font-mono text-xs text-[var(--accent)] tabular-nums">
+                    Stage {stage.code}
+                  </div>
+                  <h3 className="mt-0.5 text-sm font-medium text-[var(--text-primary)]">
+                    {stage.title}
+                  </h3>
+                </div>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                {stage.skills.map((skill) => {
-                  const isSelected = skill.name === currentSkill.name;
-                  return (
-                    <button
-                      key={skill.name}
-                      type="button"
-                      aria-pressed={isSelected}
-                      onClick={() => setSelectedSkill(skill.name)}
-                      className={`inline-flex h-9 items-center rounded-lg border px-3 font-mono text-xs transition-[transform,border-color,background-color,color] duration-150 ease-out active:scale-[0.97] ${
-                        isSelected
-                          ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)] font-medium'
-                          : 'border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-primary)] hover:border-[var(--border-strong)]'
-                      }`}
-                    >
-                      {skill.name}
-                    </button>
-                  );
-                })}
+                <div className="flex flex-1 flex-wrap gap-1.5">
+                  {stage.skills.map((skill) => {
+                    const isSelected = skill.name === currentSkill.name;
+                    return (
+                      <button
+                        key={skill.name}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => setSelectedSkill(skill.name)}
+                        className={`inline-flex h-8 items-center rounded-lg border px-2.5 font-mono text-xs transition-[transform,border-color,background-color,color] duration-150 ease-out active:scale-[0.97] ${
+                          isSelected
+                            ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)] font-medium'
+                            : 'border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+                        }`}
+                      >
+                        {skill.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right: Live Skill Inspector with Jump Links */}
+          <div
+            aria-live="polite"
+            className="flex flex-col justify-between border-t border-[var(--border-subtle)] bg-[var(--bg-base)]/40 p-5 sm:p-6 lg:col-span-5 lg:border-t-0 lg:border-l"
+          >
+            <div>
+              <div className="font-mono text-xs text-[var(--accent)]">
+                Selected · {currentSkill.name}
+              </div>
+              <p className="mt-2.5 text-sm leading-relaxed text-[var(--text-primary)]">
+                {currentSkill.usage}
+              </p>
+            </div>
+
+            <div className="mt-6 border-t border-[var(--border-subtle)] pt-4">
+              <div className="text-xs text-[var(--text-muted)]">Used in systems</div>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                {currentSkill.projectIds.length > 0 ? (
+                  currentSkill.projectIds.map((pid) => {
+                    const target = PROJECT_LOOKUP[pid];
+                    return (
+                      <button
+                        key={pid}
+                        type="button"
+                        onClick={() => onNavigate(target.anchor)}
+                        className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-strong)] bg-[var(--bg-surface)] px-3 font-mono text-xs text-[var(--text-primary)] transition-[transform,border-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
+                      >
+                        <span>{target.label}</span>
+                        <ArrowUpRight size={13} strokeWidth={1.5} className="text-[var(--accent)]" aria-hidden="true" />
+                      </button>
+                    );
+                  })
+                ) : (
+                  <span className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-xs text-[var(--text-muted)]">
+                    Coursework foundation
+                  </span>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Inspector bar for selected skill */}
-        <div
-          aria-live="polite"
-          className="mt-6 flex flex-col gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div>
-            <span className="font-mono text-xs text-[var(--accent)]">{currentSkill.name}</span>
-            <p className="mt-0.5 text-sm text-[var(--text-primary)]">{currentSkill.usage}</p>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {currentSkill.projectIds.length > 0 ? (
-              currentSkill.projectIds.map((pid) => (
-                <span
-                  key={pid}
-                  className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2.5 py-1 font-mono text-xs text-[var(--text-secondary)]"
-                >
-                  {PROJECT_NAME_MAP[pid]}
-                </span>
-              ))
-            ) : (
-              <span className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2.5 py-1 font-mono text-xs text-[var(--text-muted)]">
-                Coursework foundation
-              </span>
-            )}
           </div>
         </div>
       </div>

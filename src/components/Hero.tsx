@@ -1,4 +1,4 @@
-import { ArrowDownRight, Download } from 'lucide-react';
+import { ArrowDownRight, Download, Github, Linkedin } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROFILE } from '../data/resume';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -27,26 +27,50 @@ export function Hero({ onExploreSystems }: HeroProps) {
     >
       <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
         <motion.div {...enterProps} className="lg:col-span-5 flex flex-col items-start">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs text-[var(--text-secondary)]">
-            <span
-              className="h-2 w-2 rounded-full bg-[var(--status-ok)]"
-              aria-hidden="true"
-            />
-            <span>{PROFILE.name} · Mumbai, IN · {PROFILE.availability}</span>
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs text-[var(--text-secondary)]">
+              <span
+                className="h-2 w-2 rounded-full bg-[var(--status-ok)]"
+                aria-hidden="true"
+              />
+              <span>Mumbai, IN · {PROFILE.availability}</span>
+            </div>
+
+            <a
+              href={PROFILE.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub profile"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-[transform,border-color,color] duration-150 ease-out hover:border-[var(--border-strong)] hover:text-[var(--text-primary)] active:scale-[0.97]"
+            >
+              <Github size={15} strokeWidth={1.5} aria-hidden="true" />
+            </a>
+
+            <a
+              href={PROFILE.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn profile"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-[transform,border-color,color] duration-150 ease-out hover:border-[var(--border-strong)] hover:text-[var(--text-primary)] active:scale-[0.97]"
+            >
+              <Linkedin size={15} strokeWidth={1.5} aria-hidden="true" />
+            </a>
           </div>
 
-          <h1
-            id="hero-heading"
-            className="text-4xl font-medium tracking-tight text-[var(--text-primary)] leading-[1.08] md:text-5xl"
-          >
-            Engineering vision &amp; ML pipelines that ship
+          <h1 id="hero-heading" className="tracking-tight">
+            <span className="block text-4xl font-semibold text-[var(--text-primary)] leading-[1.05] md:text-5xl">
+              {PROFILE.name}
+            </span>
+            <span className="mt-2 block text-xl font-normal text-[var(--text-secondary)] leading-snug md:text-2xl">
+              Engineering vision &amp; ML pipelines that ship
+            </span>
           </h1>
 
-          <p className="mt-4 max-w-[44ch] text-base leading-relaxed text-[var(--text-secondary)]">
-            B.Tech AI &amp; ML student (8.98 CGPA) building PyTorch object trackers, sub-2ms fraud APIs, and cross-modal satellite indices.
+          <p className="mt-3.5 max-w-[44ch] text-base leading-relaxed text-[var(--text-secondary)]">
+            B.Tech AI &amp; ML student (8.98 CGPA) building PyTorch object trackers, sub-2ms fraud APIs, and satellite retrieval indices.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-5 flex flex-wrap items-center gap-3">
             <a
               href="#systems"
               onClick={(e) => {
