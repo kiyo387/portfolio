@@ -17,6 +17,7 @@ assertFileNonEmpty('public/Shreyas_Bhavsar_Resume.pdf');
 assertFileNonEmpty('public/assets/idd-traffic-frame.png');
 assertFileNonEmpty('public/assets/sar-port-query.png');
 assertFileNonEmpty('public/assets/optical-port-match.png');
+assertFileNonEmpty('public/assets/asset.gif');
 assertFileNonEmpty('dist/index.html');
 assertFileNonEmpty('vercel.json');
 

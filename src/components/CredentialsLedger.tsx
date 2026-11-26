@@ -1,95 +1,113 @@
-import { CERTIFICATIONS, EDUCATION } from '../data/resume';
+import { CERTIFICATIONS, EDUCATION, PROFILE } from '../data/resume';
 
 export function CredentialsLedger() {
   return (
     <section
       id="credentials"
       aria-labelledby="credentials-heading"
-      className="border-t border-[var(--border-subtle)]"
+      className="rounded-t-[40px] bg-[var(--accent)] text-black md:rounded-t-[64px]"
     >
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <h2
-          id="credentials-heading"
-          className="text-3xl font-medium tracking-tight text-[var(--text-primary)] md:text-4xl"
-        >
-          Education &amp; certifications
-        </h2>
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-24">
+        <div className="flex items-center gap-8 font-mono text-[11px] text-black/75 tabular-nums">
+          <span>[ 07 / 07 ]</span>
+          <span>CREDENTIALS &amp; ANSWERS</span>
+        </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12">
-          {/* Education Ledger */}
-          <div className="lg:col-span-7">
-            <div className="border-t border-[var(--border-strong)] pt-5">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-lg font-medium text-[var(--text-primary)]">
-                  {EDUCATION.institution}
-                </h3>
-                <span className="font-mono text-xs text-[var(--text-muted)] tabular-nums">
-                  {EDUCATION.period}
-                </span>
-              </div>
-
-              <p className="mt-1.5 text-sm text-[var(--text-secondary)]">{EDUCATION.degree}</p>
-
-              <div className="mt-4 inline-flex items-baseline gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3.5 py-2">
-                <span className="text-xs text-[var(--text-muted)]">CGPA</span>
-                <span className="font-mono text-base font-medium text-[var(--accent)] tabular-nums">
-                  {EDUCATION.cgpa}
-                </span>
-              </div>
-
-              <div className="mt-6">
-                <div className="text-xs font-medium text-[var(--text-muted)]">
-                  Relevant coursework
-                </div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {EDUCATION.coursework.map((course) => (
-                    <span
-                      key={course}
-                      className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs text-[var(--text-primary)]"
-                    >
-                      {course}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-6 border-t border-[var(--border-subtle)] pt-4">
-                <div className="text-xs font-medium text-[var(--text-muted)]">
-                  Secondary education
-                </div>
-                <div className="mt-2 flex flex-wrap gap-6 text-sm text-[var(--text-secondary)]">
-                  {EDUCATION.secondary.map((item) => (
-                    <span key={item.level} className="tabular-nums">
-                      {item.level} ({item.year})
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+        <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <h2
+              id="credentials-heading"
+              className="text-4xl font-normal tracking-[-0.04em] leading-[0.98] text-black sm:text-5xl lg:text-[56px]"
+            >
+              Credentials &amp; quick answers.
+            </h2>
           </div>
 
-          {/* Certifications Ledger */}
-          <div className="lg:col-span-5">
-            <div className="border-t border-[var(--border-strong)] pt-5">
-              <h3 className="text-lg font-medium text-[var(--text-primary)]">Certifications</h3>
-              <div className="mt-4 divide-y divide-[var(--border-subtle)] border-b border-[var(--border-subtle)]">
+          <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-8">
+            <div>
+              <span className="inline-block bg-black px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent)]">
+                001
+              </span>
+              <h3 className="mt-3 text-lg font-medium tracking-tight text-black">
+                Where &amp; what do I study?
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-black/80">
+                {EDUCATION.institution} ({EDUCATION.period}). {EDUCATION.degree} —{' '}
+                <strong className="font-semibold text-black tabular-nums">
+                  CGPA {EDUCATION.cgpa}
+                </strong>
+                . Coursework: {EDUCATION.coursework.join(', ')}. Secondary:{' '}
+                {EDUCATION.secondary.map((s) => `${s.level} (${s.year})`).join(' | ')}.
+              </p>
+            </div>
+
+            <div>
+              <span className="inline-block bg-black px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent)]">
+                002
+              </span>
+              <h3 className="mt-3 text-lg font-medium tracking-tight text-black">
+                What certifications are verified?
+              </h3>
+              <div className="mt-2 space-y-2 text-sm leading-relaxed text-black/80">
                 {CERTIFICATIONS.map((cert) => (
-                  <div
-                    key={`${cert.issuer}-${cert.title}`}
-                    className="flex items-start justify-between gap-4 py-4"
-                  >
-                    <div>
-                      <div className="text-sm font-medium text-[var(--text-primary)]">
-                        {cert.title}
-                      </div>
-                      <div className="mt-0.5 text-xs text-[var(--text-muted)]">{cert.issuer}</div>
-                    </div>
-                    <span className="shrink-0 font-mono text-xs text-[var(--text-secondary)] tabular-nums">
-                      {cert.date}
+                  <p key={`${cert.issuer}-${cert.title}`}>
+                    <strong className="font-medium text-black">{cert.issuer}:</strong> {cert.title}{' '}
+                    <span className="font-mono text-xs text-black/70 tabular-nums">
+                      ({cert.date})
                     </span>
-                  </div>
+                  </p>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <span className="inline-block bg-black px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent)]">
+                003
+              </span>
+              <h3 className="mt-3 text-lg font-medium tracking-tight text-black">
+                What roles am I targeting?
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-black/80">
+                {PROFILE.availability} across Computer Vision, Applied ML, and backend inference engineering — shipping evaluated, Dockerized Python &amp; FastAPI systems ({PROFILE.location} or remote).
+              </p>
+            </div>
+
+            <div>
+              <span className="inline-block bg-black px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent)]">
+                004
+              </span>
+              <h3 className="mt-3 text-lg font-medium tracking-tight text-black">
+                Where is the source &amp; resume?
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-black/80">
+                Public project repositories are hosted on{' '}
+                <a
+                  href={PROFILE.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-black underline underline-offset-4 hover:opacity-75"
+                >
+                  github.com/kiyo387
+                </a>
+                , profile on{' '}
+                <a
+                  href={PROFILE.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-black underline underline-offset-4 hover:opacity-75"
+                >
+                  LinkedIn
+                </a>
+                , and the full CV is available as a{' '}
+                <a
+                  href={PROFILE.resumeUrl}
+                  download="Shreyas_Bhavsar_Resume.pdf"
+                  className="font-medium text-black underline underline-offset-4 hover:opacity-75"
+                >
+                  PDF download
+                </a>
+                .
+              </p>
             </div>
           </div>
         </div>

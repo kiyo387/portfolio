@@ -525,6 +525,14 @@ export function VisionViewport() {
           </div>
         </div>
 
+        {/* Calibration laser scanline */}
+        {!reducedMotion && (
+          <div
+            aria-hidden="true"
+            className="animate-optical-scan pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-transparent via-[var(--accent)]/12 to-transparent"
+          />
+        )}
+
         {/* Interactive SVG overlay: ROI polygon, detections, tracks, draggable handles */}
         <svg
           ref={svgRef}
@@ -559,9 +567,15 @@ export function VisionViewport() {
             const tagY = det.box.y > 28 ? det.box.y - 22 : det.box.y + 4;
 
             return (
-              <g
+              <motion.g
                 key={det.id}
-                opacity={boxOpacity}
+                initial={reducedMotion ? false : { opacity: 0 }}
+                animate={{ opacity: boxOpacity }}
+                transition={
+                  reducedMotion
+                    ? { duration: 0 }
+                    : { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
+                }
                 onClick={() => setSelectedId(det.id)}
                 className="cursor-pointer"
               >
@@ -627,7 +641,7 @@ export function VisionViewport() {
                 >
                   {labelText}
                 </text>
-              </g>
+              </motion.g>
             );
           })}
 
