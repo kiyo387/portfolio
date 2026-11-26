@@ -51,7 +51,7 @@ export function Hero({ onExploreSystems }: HeroProps) {
               maskImage:
                 'radial-gradient(ellipse 68% 72% at 50% 44%, black 42%, transparent 96%)',
             }}
-            className="h-[220px] w-full object-contain sm:h-[260px] lg:h-[290px]"
+            className="h-[200px] w-full object-contain sm:h-[230px] lg:h-[250px]"
           />
         ) : (
           <svg
@@ -77,7 +77,7 @@ export function Hero({ onExploreSystems }: HeroProps) {
       {/* Overlapping centered monumental display headline */}
       <motion.div
         style={reducedMotion ? undefined : { opacity: textOpacity, y: textY }}
-        className="relative z-10 mx-auto -mt-12 w-full max-w-5xl px-4 text-center sm:-mt-16"
+        className="relative z-10 mx-auto -mt-4 w-full max-w-5xl px-4 text-center"
       >
         <h1
           id="hero-heading"
