@@ -28,11 +28,7 @@ export function Hero({ onExploreSystems }: HeroProps) {
       <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
         <motion.div {...enterProps} className="lg:col-span-5 flex flex-col items-start">
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs text-[var(--text-secondary)]">
-              <span
-                className="h-2 w-2 rounded-full bg-[var(--status-ok)]"
-                aria-hidden="true"
-              />
+            <div className="inline-flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs text-[var(--text-secondary)]">
               <span>Mumbai, IN · {PROFILE.availability}</span>
             </div>
 
