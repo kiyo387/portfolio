@@ -1,6 +1,5 @@
 export interface Profile {
   name: string;
-  monogram: string;
   role: string;
   location: string;
   email: string;
@@ -8,7 +7,6 @@ export interface Profile {
   linkedinUrl: string;
   cgpa: string;
   availability: string;
-  summary: string;
   resumeUrl: string;
 }
 
@@ -23,7 +21,6 @@ export interface ProjectEntry {
   id: 'traffic-cv' | 'fraud-api' | 'isro-satretrieval';
   index: string;
   title: string;
-  subtitle: string;
   period: string;
   category: string;
   headlineMetric: string;
@@ -31,14 +28,12 @@ export interface ProjectEntry {
   sectionAnchor: 'traffic-architecture' | 'fraud-workbench' | 'sat-retrieval';
   bullets: string[];
   technologies: string[];
-  pipelineSteps: { stage: string; detail: string }[];
 }
 
 export interface PipelineStage {
   id: 'data' | 'modeling' | 'evaluation' | 'deployment';
   code: string;
   title: string;
-  description: string;
   skills: {
     name: string;
     usage: string;
@@ -54,7 +49,6 @@ export interface Certification {
 
 export const PROFILE: Profile = {
   name: 'Shreyas Bhavsar',
-  monogram: 'SB',
   role: 'AI/ML & Computer Vision Engineer',
   location: 'Mumbai, Maharashtra, India',
   email: 'shreyasbhavsar387@gmail.com',
@@ -62,8 +56,6 @@ export const PROFILE: Profile = {
   linkedinUrl: 'https://www.linkedin.com/in/shreyas-bhavsar-053b8440a/',
   cgpa: '8.98/10',
   availability: 'Seeking AI/ML Internship',
-  summary:
-    'B.Tech Computer Science and Engineering (AI & ML) student (CGPA 8.98/10) building end-to-end machine learning and computer vision pipelines in Python, from data preparation and model training to error analysis and Dockerized REST API deployment.',
   resumeUrl: '/Shreyas_Bhavsar_Resume.pdf',
 };
 
@@ -99,7 +91,6 @@ export const PROJECTS: ProjectEntry[] = [
     id: 'traffic-cv',
     index: '01',
     title: 'Indian Traffic Vehicle Detection with YOLOv8',
-    subtitle: 'Computer Vision · Multi-Object Tracking · ROI Telemetry',
     period: 'Nov 2026 – Present',
     category: 'Computer Vision',
     headlineMetric: '+28% mAP@50:95 (0.345 -> 0.443)',
@@ -122,18 +113,11 @@ export const PROJECTS: ProjectEntry[] = [
       'Pandas',
       'Weights & Biases',
     ],
-    pipelineSteps: [
-      { stage: '01 Data', detail: 'IDD 41K+ images, 507K+ boxes, leak-free sequence splits' },
-      { stage: '02 Train', detail: 'YOLOv8 640 -> 1280 scaling in PyTorch + W&B error analysis' },
-      { stage: '03 Track', detail: 'ByteTrack association + polygon ROI gating (94–100% Hungarian match)' },
-      { stage: '04 Ship', detail: '39–41 FPS RTX 4050 · Dockerized FastAPI + Gradio calibration UI' },
-    ],
   },
   {
     id: 'fraud-api',
     index: '02',
     title: 'Real-Time Credit Card Fraud Detection & Anomaly Scoring',
-    subtitle: 'Imbalanced Tabular ML · Threshold Calibration · FastAPI Microservice',
     period: 'Sep 2026',
     category: 'ML Systems',
     headlineMetric: '0.984 ROC-AUC · < 1.8 ms/tx',
@@ -144,18 +128,11 @@ export const PROJECTS: ProjectEntry[] = [
       'Addressed severe class imbalance by combining RobustScaler, SMOTE oversampling, and tree-based ensembles (XGBoost, Random Forest), tuning decision thresholds on Precision-Recall curves to balance precision and recall.',
     ],
     technologies: ['Python', 'Scikit-learn', 'XGBoost', 'FastAPI', 'Docker'],
-    pipelineSteps: [
-      { stage: '01 Scale', detail: 'RobustScaler normalization on heavy-tailed transaction amounts' },
-      { stage: '02 Balance', detail: 'SMOTE oversampling for 0.17% positive fraud class distribution' },
-      { stage: '03 Tune', detail: 'XGBoost & Random Forest calibrated on Precision-Recall curves (0.865 PR-AUC)' },
-      { stage: '04 Serve', detail: 'Dockerized FastAPI POST /predict returning decision under 1.8 ms' },
-    ],
   },
   {
     id: 'isro-satretrieval',
     index: '03',
     title: 'ISRO Bharatiya Antariksh Hackathon 2026 — SatRetrieval',
-    subtitle: 'Problem Statement 11 · Cross-Modal SAR-to-Optical Satellite Retrieval',
     period: '2026',
     category: 'Hackathon',
     headlineMetric: '24,050 FAISS HNSW Vectors',
@@ -172,12 +149,6 @@ export const PROJECTS: ProjectEntry[] = [
       'k-Reciprocal Re-Ranking',
       'SAR & Optical Imagery',
     ],
-    pipelineSteps: [
-      { stage: '01 Sensors', detail: 'Multi-sensor SAR & optical alignment (Sentinel-1/2, Landsat, LISS-3, RISAT)' },
-      { stage: '02 Encode', detail: 'CROMA ViT-Base cross-modal representation embeddings' },
-      { stage: '03 Index', detail: 'FAISS HNSW approximate nearest-neighbor index (24,050 vectors)' },
-      { stage: '04 Re-Rank', detail: 'k-reciprocal neighborhood re-ranking to suppress false radar matches' },
-    ],
   },
 ];
 
@@ -186,7 +157,6 @@ export const PIPELINE_STAGES: PipelineStage[] = [
     id: 'data',
     code: '01',
     title: 'Data & Preparation',
-    description: 'Leak-free sequence splitting, severe class-imbalance handling, and relational querying.',
     skills: [
       { name: 'Python', usage: 'End-to-end training, inference, and microservice codebases', projectIds: ['traffic-cv', 'fraud-api', 'isro-satretrieval'] },
       { name: 'Pandas', usage: 'Annotation auditing, sequence split validation, feature pipelines', projectIds: ['traffic-cv', 'fraud-api'] },
@@ -199,7 +169,6 @@ export const PIPELINE_STAGES: PipelineStage[] = [
     id: 'modeling',
     code: '02',
     title: 'Vision & ML Modeling',
-    description: 'High-resolution object detection, tree-based ensembles, and cross-modal ViT retrieval.',
     skills: [
       { name: 'PyTorch', usage: 'YOLOv8 640->1280 training and CROMA ViT-Base inference pipelines', projectIds: ['traffic-cv', 'isro-satretrieval'] },
       { name: 'YOLOv8', usage: 'IDD traffic detector scaled to 1280px for small-object recall', projectIds: ['traffic-cv'] },
@@ -214,7 +183,6 @@ export const PIPELINE_STAGES: PipelineStage[] = [
     id: 'evaluation',
     code: '03',
     title: 'Tracking & Evaluation',
-    description: 'Multi-object association, threshold calibration, and experiment observability.',
     skills: [
       { name: 'ByteTrack', usage: '94–100% directional vehicle counting with polygon ROI gating', projectIds: ['traffic-cv'] },
       { name: 'OpenCV', usage: '1080p frame decoding, ROI polygon overlays, real-time stream processing', projectIds: ['traffic-cv'] },
@@ -226,7 +194,6 @@ export const PIPELINE_STAGES: PipelineStage[] = [
     id: 'deployment',
     code: '04',
     title: 'API & Deployment',
-    description: 'Containerized REST microservices and interactive calibration interfaces.',
     skills: [
       { name: 'FastAPI', usage: 'Production REST APIs for traffic inference and <1.8 ms fraud scoring', projectIds: ['traffic-cv', 'fraud-api'] },
       { name: 'REST APIs', usage: 'Typed Pydantic request schemas, threshold controls, health checks', projectIds: ['traffic-cv', 'fraud-api'] },

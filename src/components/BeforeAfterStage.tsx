@@ -2,7 +2,14 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
-const BEFORE_CARDS = [
+interface StageCardItem {
+  index: string;
+  title: string;
+  detail: string;
+  positionClass: string;
+}
+
+const BEFORE_CARDS: StageCardItem[] = [
   {
     index: '[01]',
     title: 'SMALL-OBJECT BLINDNESS.',
@@ -26,7 +33,7 @@ const BEFORE_CARDS = [
   },
 ];
 
-const ENGINEERED_CARDS = [
+const ENGINEERED_CARDS: StageCardItem[] = [
   {
     index: '[01]',
     title: '1280PX + BYTETRACK ROI.',
@@ -50,6 +57,57 @@ const ENGINEERED_CARDS = [
   },
 ];
 
+function StageCard({
+  card,
+  variant,
+  animated,
+  index,
+}: {
+  card: StageCardItem;
+  variant: 'before' | 'engineered';
+  animated: boolean;
+  index: number;
+}) {
+  const isEngineered = variant === 'engineered';
+  const className = `w-full ${isEngineered ? 'max-w-[360px] border-[var(--accent)]/55 shadow-[0_0_70px_-16px_rgba(244,72,73,0.34)]' : 'max-w-[340px] border-[var(--border-subtle)] shadow-[0_0_50px_-18px_rgba(244,72,73,0.18)]'} rounded-lg border bg-[var(--bg-surface)]/95 p-6 ${card.positionClass}`;
+
+  const body = (
+    <>
+      <div className="flex items-center justify-between gap-2 font-mono text-xs">
+        <span className="font-semibold text-[var(--text-primary)]">{card.title}</span>
+        <span className="text-[var(--accent)]">{card.index}</span>
+      </div>
+      <p
+        className={`mt-3 font-mono text-xs leading-relaxed ${
+          isEngineered ? 'text-[var(--text-primary)]/90' : 'text-[var(--text-secondary)]'
+        }`}
+      >
+        {card.detail}
+      </p>
+    </>
+  );
+
+  if (!animated) {
+    return <div className={className}>{body}</div>;
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: isEngineered ? 44 : 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{
+        duration: isEngineered ? 0.55 : 0.5,
+        delay: index * (isEngineered ? 0.08 : 0.06),
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className={className}
+    >
+      {body}
+    </motion.div>
+  );
+}
+
 function StaticBeforeAfterStage() {
   return (
     <section
@@ -71,19 +129,8 @@ function StaticBeforeAfterStage() {
         </h2>
 
         <div className="space-y-12 md:space-y-20">
-          {BEFORE_CARDS.map((card) => (
-            <div
-              key={card.title}
-              className={`w-full max-w-[340px] rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-[0_0_50px_-18px_rgba(244,72,73,0.18)] ${card.positionClass}`}
-            >
-              <div className="flex items-center justify-between gap-2 font-mono text-xs">
-                <span className="font-semibold text-[var(--text-primary)]">{card.title}</span>
-                <span className="text-[var(--accent)]">{card.index}</span>
-              </div>
-              <p className="mt-3 font-mono text-xs leading-relaxed text-[var(--text-secondary)]">
-                {card.detail}
-              </p>
-            </div>
+          {BEFORE_CARDS.map((card, idx) => (
+            <StageCard key={card.title} card={card} variant="before" animated={false} index={idx} />
           ))}
         </div>
 
@@ -92,19 +139,8 @@ function StaticBeforeAfterStage() {
         </h3>
 
         <div className="space-y-12 md:space-y-20">
-          {ENGINEERED_CARDS.map((card) => (
-            <div
-              key={card.title}
-              className={`w-full max-w-[360px] rounded-lg border border-[var(--accent)]/55 bg-[var(--bg-surface)] p-6 shadow-[0_0_70px_-16px_rgba(244,72,73,0.34)] ${card.positionClass}`}
-            >
-              <div className="flex items-center justify-between gap-2 font-mono text-xs">
-                <span className="font-semibold text-[var(--text-primary)]">{card.title}</span>
-                <span className="text-[var(--accent)]">{card.index}</span>
-              </div>
-              <p className="mt-3 font-mono text-xs leading-relaxed text-[var(--text-primary)]/90">
-                {card.detail}
-              </p>
-            </div>
+          {ENGINEERED_CARDS.map((card, idx) => (
+            <StageCard key={card.title} card={card} variant="engineered" animated={false} index={idx} />
           ))}
         </div>
       </div>
@@ -136,7 +172,6 @@ function StickyBeforeAfterStage() {
       aria-labelledby="before-after-heading"
       className="honey-starfield relative border-y border-[var(--border-subtle)] bg-[var(--bg-base)]"
     >
-      {/* Sticky backdrop stage stays pinned behind BEFORE and ENGINEERED cards */}
       <div className="pointer-events-none sticky top-0 z-0 flex h-[100dvh] flex-col justify-between overflow-hidden px-4 pt-20 pb-10 sm:px-6 sm:pt-24 lg:px-8">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
           <div className="flex items-center gap-8">
@@ -172,21 +207,18 @@ function StickyBeforeAfterStage() {
             className="relative text-5xl font-semibold tracking-[-0.045em] leading-[0.94] sm:text-7xl lg:text-[92px]"
           >
             <motion.span
-              data-stage-word="before"
               style={{ opacity: beforeOpacity, scale: beforeScale }}
               className="relative inline-block text-[var(--text-primary)] will-change-[transform,opacity]"
             >
               BEFORE
               <motion.span
                 aria-hidden="true"
-                data-stage-strike="true"
                 style={{ scaleX: strikeScaleX, opacity: strikeOpacity }}
                 className="pointer-events-none absolute top-1/2 right-0 left-0 h-[3px] -translate-y-1/2 origin-left bg-[var(--accent)]"
               />
             </motion.span>
 
             <motion.span
-              data-stage-word="engineered"
               style={{ opacity: engineeredOpacity, scale: engineeredScale }}
               className="mt-1 block text-[var(--text-primary)] will-change-[transform,opacity]"
             >
@@ -198,55 +230,18 @@ function StickyBeforeAfterStage() {
         <div aria-hidden="true" className="h-4" />
       </div>
 
-      {/* Scrolling Cards Foreground Layer */}
       <div className="relative z-10 mx-auto -mt-[18vh] max-w-6xl px-4 pb-[24vh] sm:px-6 lg:px-8">
         <div className="space-y-14 md:space-y-24">
           {BEFORE_CARDS.map((card, idx) => (
-            <motion.div
-              key={card.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              className={`w-full max-w-[340px] rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]/95 p-6 shadow-[0_0_50px_-18px_rgba(244,72,73,0.18)] ${card.positionClass}`}
-            >
-              <div className="flex items-center justify-between gap-2 font-mono text-xs">
-                <span className="font-semibold text-[var(--text-primary)]">{card.title}</span>
-                <span className="text-[var(--accent)]">{card.index}</span>
-              </div>
-              <p className="mt-3 font-mono text-xs leading-relaxed text-[var(--text-secondary)]">
-                {card.detail}
-              </p>
-            </motion.div>
+            <StageCard key={card.title} card={card} variant="before" animated index={idx} />
           ))}
         </div>
 
-        {/* Open midpoint clearing anchors BEFORE -> // ENGINEERED transition */}
-        <div
-          ref={transitionRef}
-          data-stage-divider="true"
-          className="h-[58vh] md:h-[68vh]"
-          aria-hidden="true"
-        />
+        <div ref={transitionRef} className="h-[58vh] md:h-[68vh]" aria-hidden="true" />
 
         <div className="space-y-14 md:space-y-24">
           {ENGINEERED_CARDS.map((card, idx) => (
-            <motion.div
-              key={card.title}
-              initial={{ opacity: 0, y: 44 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className={`w-full max-w-[360px] rounded-lg border border-[var(--accent)]/55 bg-[var(--bg-surface)]/95 p-6 shadow-[0_0_70px_-16px_rgba(244,72,73,0.34)] ${card.positionClass}`}
-            >
-              <div className="flex items-center justify-between gap-2 font-mono text-xs">
-                <span className="font-semibold text-[var(--text-primary)]">{card.title}</span>
-                <span className="text-[var(--accent)]">{card.index}</span>
-              </div>
-              <p className="mt-3 font-mono text-xs leading-relaxed text-[var(--text-primary)]/90">
-                {card.detail}
-              </p>
-            </motion.div>
+            <StageCard key={card.title} card={card} variant="engineered" animated index={idx} />
           ))}
         </div>
       </div>

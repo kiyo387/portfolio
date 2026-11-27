@@ -90,7 +90,6 @@ function WheelSlot({
 
   return (
     <motion.div
-      data-wheel-slot={slotIndex}
       style={{ transform, opacity, transformOrigin: 'left center' }}
       className="pointer-events-none absolute inset-x-0 top-1/2 -mt-[0.58em] whitespace-nowrap text-[26px] font-normal tracking-[-0.035em] leading-[1.15] text-[var(--text-primary)] will-change-[transform,opacity] sm:text-[38px] md:text-[44px] lg:text-[46px] xl:text-[52px]"
     >
@@ -121,6 +120,54 @@ function ScrubWord({
   );
 }
 
+function AboutContent({
+  onExploreLabs,
+  progress,
+}: ScrollManifestoProps & { progress?: MotionValue<number> }) {
+  return (
+    <>
+      <span className="inline-block rounded-[3px] bg-[var(--accent)] px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent-ink)]">
+        ABOUT
+      </span>
+
+      <p className="mt-5 text-2xl font-normal tracking-[-0.03em] leading-[1.24] text-[var(--text-primary)] sm:text-3xl lg:text-[32px]">
+        {ABOUT_WORDS.map((item, idx) => {
+          if (!progress) {
+            return (
+              <span
+                key={`${item.text}-${idx}`}
+                className={`mr-[0.26em] inline-block ${item.accent ? 'text-[var(--accent)]' : ''}`}
+              >
+                {item.text}
+              </span>
+            );
+          }
+          const start = idx / ABOUT_WORDS.length;
+          const end = Math.min(1, start + 1.8 / ABOUT_WORDS.length);
+          return (
+            <ScrubWord
+              key={`${item.text}-${idx}`}
+              word={item.text}
+              accent={item.accent}
+              progress={progress}
+              range={[start, end]}
+            />
+          );
+        })}
+      </p>
+
+      <button
+        type="button"
+        onClick={onExploreLabs}
+        className="mt-8 inline-flex h-10 items-center justify-between gap-8 border border-[var(--border-strong)] px-4 font-mono text-[11px] text-[var(--text-primary)] transition-[transform,border-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
+      >
+        <span>EXPLORE LIVE LABS</span>
+        <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
+      </button>
+    </>
+  );
+}
+
 function PinnedAbout({ onExploreLabs }: ScrollManifestoProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
@@ -132,34 +179,7 @@ function PinnedAbout({ onExploreLabs }: ScrollManifestoProps) {
     <div ref={containerRef} className="relative min-h-[185vh]">
       <div className="sticky top-0 flex h-[100dvh] items-center justify-center px-4 sm:px-6">
         <div className="w-full max-w-xl">
-          <span className="inline-block rounded-[3px] bg-[var(--accent)] px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent-ink)]">
-            ABOUT
-          </span>
-
-          <p className="mt-5 text-2xl font-normal tracking-[-0.03em] leading-[1.24] text-[var(--text-primary)] sm:text-3xl lg:text-[32px]">
-            {ABOUT_WORDS.map((item, idx) => {
-              const start = idx / ABOUT_WORDS.length;
-              const end = Math.min(1, start + 1.8 / ABOUT_WORDS.length);
-              return (
-                <ScrubWord
-                  key={`${item.text}-${idx}`}
-                  word={item.text}
-                  accent={item.accent}
-                  progress={scrollYProgress}
-                  range={[start, end]}
-                />
-              );
-            })}
-          </p>
-
-          <button
-            type="button"
-            onClick={onExploreLabs}
-            className="mt-8 inline-flex h-10 items-center justify-between gap-8 border border-[var(--border-strong)] px-4 font-mono text-[11px] text-[var(--text-primary)] transition-[transform,border-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
-          >
-            <span>EXPLORE LIVE LABS</span>
-            <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
-          </button>
+          <AboutContent onExploreLabs={onExploreLabs} progress={scrollYProgress} />
         </div>
       </div>
     </div>
@@ -169,29 +189,7 @@ function PinnedAbout({ onExploreLabs }: ScrollManifestoProps) {
 function StaticAbout({ onExploreLabs }: ScrollManifestoProps) {
   return (
     <div className="mx-auto max-w-xl px-4 py-20 sm:px-6 sm:py-28">
-      <span className="inline-block rounded-[3px] bg-[var(--accent)] px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent-ink)]">
-        ABOUT
-      </span>
-
-      <p className="mt-5 text-2xl font-normal tracking-[-0.03em] leading-[1.24] text-[var(--text-primary)] sm:text-3xl">
-        {ABOUT_WORDS.map((item, idx) => (
-          <span
-            key={`${item.text}-${idx}`}
-            className={`mr-[0.26em] inline-block ${item.accent ? 'text-[var(--accent)]' : ''}`}
-          >
-            {item.text}
-          </span>
-        ))}
-      </p>
-
-      <button
-        type="button"
-        onClick={onExploreLabs}
-        className="mt-8 inline-flex h-10 items-center justify-between gap-8 border border-[var(--border-strong)] px-4 font-mono text-[11px] text-[var(--text-primary)] transition-[transform,border-color] duration-150 ease-out hover:border-[var(--accent)] active:scale-[0.97]"
-      >
-        <span>EXPLORE LIVE LABS</span>
-        <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
-      </button>
+      <AboutContent onExploreLabs={onExploreLabs} />
     </div>
   );
 }
@@ -219,7 +217,6 @@ function CapabilitiesWheelSection({
   return (
     <div
       ref={wheelSectionRef}
-      id="capabilities-wheel-section"
       className={
         isPinned
           ? 'relative min-h-[230vh] border-t border-[var(--border-subtle)]'
@@ -321,10 +318,6 @@ export function ScrollManifesto({ onExploreLabs }: ScrollManifestoProps) {
 
   return (
     <section aria-label="About and capabilities">
-      <div className="sr-only" id="about-manifesto-label">
-        About Shreyas Bhavsar
-      </div>
-
       {isDesktop && !reducedMotion ? (
         <PinnedAbout onExploreLabs={onExploreLabs} />
       ) : (

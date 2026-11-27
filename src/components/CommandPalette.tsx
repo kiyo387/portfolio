@@ -12,7 +12,7 @@ import { motion } from 'motion/react';
 import { PROFILE } from '../data/resume';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
-export interface CommandPaletteProps {
+interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (sectionId: string) => void;
