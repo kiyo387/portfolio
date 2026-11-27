@@ -8,6 +8,7 @@ import { Hero } from './components/Hero';
 import { MetricsBar } from './components/MetricsBar';
 import { Navbar } from './components/Navbar';
 import { PrinciplesSection } from './components/PrinciplesSection';
+import { ReticleCursor } from './components/ReticleCursor';
 import { ScrollManifesto } from './components/ScrollManifesto';
 import { SkillPipeline } from './components/SkillPipeline';
 import { SystemsSection, type LabProjectId } from './components/SystemsSection';
@@ -175,6 +176,7 @@ export default function App() {
         onClose={() => setPaletteOpen(false)}
         onNavigate={handleNavigate}
       />
+      <ReticleCursor />
     </div>
   );
 }

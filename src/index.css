@@ -178,6 +178,52 @@ p {
   }
 }
 
+@media (hover: hover) and (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor [contenteditable="true"] {
+    cursor: text !important;
+  }
+  html.has-custom-cursor dialog[open],
+  html.has-custom-cursor dialog[open] * {
+    cursor: auto !important;
+  }
+  html.has-custom-cursor dialog[open] a,
+  html.has-custom-cursor dialog[open] button {
+    cursor: pointer !important;
+  }
+}
+
+.reticle-box {
+  transition:
+    width 160ms var(--ease-out-strong),
+    height 160ms var(--ease-out-strong),
+    margin-left 160ms var(--ease-out-strong),
+    margin-top 160ms var(--ease-out-strong);
+}
+
+.reticle-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(255, 255, 255, 0.72);
+  border-style: solid;
+  transition: border-color 140ms ease;
+}
+
+.reticle-box.is-hover .reticle-corner {
+  border-color: var(--accent);
+}
+
+.reticle-tl { top: 0; left: 0; border-width: 1.5px 0 0 1.5px; }
+.reticle-tr { top: 0; right: 0; border-width: 1.5px 1.5px 0 0; }
+.reticle-bl { bottom: 0; left: 0; border-width: 0 0 1.5px 1.5px; }
+.reticle-br { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; }
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
