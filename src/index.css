@@ -20,8 +20,7 @@
   --color-status-warn: var(--status-warn);
 }
 
-:root,
-[data-theme="dark"] {
+:root {
   --bg-base: #000000;
   --bg-sheet: #151515;
   --bg-surface: #0d0d0d;
@@ -37,30 +36,8 @@
   --status-ok: #22c55e;
   --status-warn: #ef4444;
   --img-outline: rgba(255, 255, 255, 0.1);
-  color-scheme: dark;
-}
-
-[data-theme="light"] {
-  --bg-base: #ffffff;
-  --bg-sheet: #f3f3f1;
-  --bg-surface: #fafafa;
-  --bg-elevated: #e7e7e4;
-  --border-subtle: rgba(10, 10, 10, 0.09);
-  --border-strong: rgba(10, 10, 10, 0.20);
-  --text-primary: #0a0a0a;
-  --text-secondary: #52525b;
-  --text-muted: #71717a;
-  --accent: #dc2626;
-  --accent-hover: #b91c1c;
-  --accent-ink: #ffffff;
-  --status-ok: #15803d;
-  --status-warn: #b91c1c;
-  --img-outline: rgba(0, 0, 0, 0.1);
-  color-scheme: light;
-}
-
-:root {
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  color-scheme: dark;
 }
 
 html {
@@ -162,17 +139,6 @@ p {
 
 .honey-marquee-text {
   color: rgba(255, 255, 255, 0.16);
-}
-
-[data-theme="light"] .honey-starfield {
-  background-image:
-    radial-gradient(1px 1px at 18px 28px, rgba(10, 10, 10, 0.14), transparent),
-    radial-gradient(1px 1px at 74px 62px, rgba(10, 10, 10, 0.09), transparent);
-  background-size: 190px 150px;
-}
-
-[data-theme="light"] .honey-marquee-text {
-  color: rgba(10, 10, 10, 0.14);
 }
 
 .contact-dialog {

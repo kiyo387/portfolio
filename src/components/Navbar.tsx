@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { PROFILE } from '../data/resume';
 import { RollingLabel } from './RollingLabel';
 
 interface NavbarProps {
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
   onOpenPalette: () => void;
   onNavigate: (sectionId: string) => void;
 }
@@ -19,7 +17,7 @@ const LEFT_LINKS = [
 
 type NavSectionId = (typeof LEFT_LINKS)[number]['id'];
 
-export function Navbar({ theme, onToggleTheme, onOpenPalette, onNavigate }: NavbarProps) {
+export function Navbar({ onOpenPalette, onNavigate }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<NavSectionId | null>(null);
 
@@ -158,19 +156,6 @@ export function Navbar({ theme, onToggleTheme, onOpenPalette, onNavigate }: Navb
 
         {/* Far Right Actions */}
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to daylight theme' : 'Switch to dark theme'}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]/80 text-[var(--text-secondary)] transition-[transform,border-color,color] duration-150 ease-out hover:border-[var(--border-strong)] hover:text-[var(--text-primary)] active:scale-[0.97]"
-          >
-            {theme === 'dark' ? (
-              <Sun size={14} strokeWidth={1.5} aria-hidden="true" />
-            ) : (
-              <Moon size={14} strokeWidth={1.5} aria-hidden="true" />
-            )}
-          </button>
-
           <button
             type="button"
             onClick={() => handleLinkClick('contact')}

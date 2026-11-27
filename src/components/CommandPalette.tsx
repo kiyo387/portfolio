@@ -5,9 +5,7 @@ import {
   Download,
   Github,
   Linkedin,
-  Moon,
   Search,
-  Sun,
   X,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -17,8 +15,6 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 export interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
   onNavigate: (sectionId: string) => void;
 }
 
@@ -50,8 +46,6 @@ function triggerResumeDownload() {
 export function CommandPalette({
   isOpen,
   onClose,
-  theme,
-  onToggleTheme,
   onNavigate,
 }: CommandPaletteProps) {
   const reducedMotion = useReducedMotion();
@@ -133,25 +127,8 @@ export function CommandPalette({
           onClose();
         },
       },
-      {
-        id: 'action-theme',
-        group: 'Actions',
-        label: theme === 'dark' ? 'Switch to Daylight theme' : 'Switch to Dark theme',
-        hint: theme === 'dark' ? 'Light' : 'Dark',
-        keywords: 'theme dark light daylight appearance mode',
-        icon:
-          theme === 'dark' ? (
-            <Sun size={16} strokeWidth={1.5} aria-hidden="true" />
-          ) : (
-            <Moon size={16} strokeWidth={1.5} aria-hidden="true" />
-          ),
-        run: () => {
-          onToggleTheme();
-          onClose();
-        },
-      },
     ];
-  }, [onClose, onNavigate, onToggleTheme, theme]);
+  }, [onClose, onNavigate]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

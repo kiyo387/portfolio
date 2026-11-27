@@ -15,21 +15,11 @@ import { PROFILE } from './data/resume';
 import { useReducedMotion } from './hooks/useReducedMotion';
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    if (typeof window === 'undefined') return 'dark';
-    const saved = window.localStorage.getItem('portfolio-theme');
-    return saved === 'light' ? 'light' : 'dark';
-  });
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [activeLabId, setActiveLabId] = useState<LabProjectId>('traffic-cv');
   const reducedMotion = useReducedMotion();
   const lenisRef = useRef<Lenis | null>(null);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    window.localStorage.setItem('portfolio-theme', theme);
-  }, [theme]);
 
   useEffect(() => {
     if (reducedMotion || paletteOpen || contactOpen) {
@@ -77,10 +67,6 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const handleToggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  }, []);
-
   const handleNavigate = useCallback(
     (sectionId: string) => {
       let scrollTargetId = sectionId;
@@ -120,8 +106,6 @@ export default function App() {
       </a>
 
       <Navbar
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
         onOpenPalette={() => setPaletteOpen(true)}
         onNavigate={handleNavigate}
       />
@@ -189,8 +173,6 @@ export default function App() {
       <CommandPalette
         isOpen={paletteOpen}
         onClose={() => setPaletteOpen(false)}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
       />
     </div>
